@@ -1,7 +1,7 @@
 # Личный проект «YetiCave»
 
 * Студент: [Иван Мулярчик](https://up.htmlacademy.ru/php/10/user/382187).
-* Наставник: `Неизвестно`.
+* Наставник: [Jenia Bunos](https://htmlacademy.ru/profile/id1092709).
 
 ---
 
