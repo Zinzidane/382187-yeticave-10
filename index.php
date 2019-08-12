@@ -42,11 +42,15 @@ $lots = [
     ]
 ];
 
-function format_price($price, $className, $currency) {
+function format_price($price) {
     $ceiled_price = ceil($price);
     $formatted_price = number_format($ceiled_price, 0, '.', ' ');
 
-    return "{$formatted_price}<b class={$className}>{$currency}</b>";
+    return $formatted_price;
+}
+
+function add_currency_to_price($price, $className, $currency) {
+    return "{$price}<b class={$className}>{$currency}</b>";
 }
 ?>
 
@@ -124,7 +128,7 @@ function format_price($price, $className, $currency) {
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Стартовая цена</span>
-                            <span class="lot__cost"><?=format_price($lot['price'], 'rub', 'р'); ?></span>
+                            <span class="lot__cost"><?=add_currency_to_price(format_price($lot['price']), 'rub', 'р'); ?></span>
                         </div>
                         <div class="lot__timer timer">
                             12:23
