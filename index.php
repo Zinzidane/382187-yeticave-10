@@ -50,7 +50,12 @@ function format_price($price) {
 }
 
 function add_currency_to_price($price, $className, $currency) {
-    return "{$price}<b class={$className}>{$currency}</b>";
+    sprintf(
+        '%s<b class=%s>%s</b>',
+        $price,
+        $className,
+        $currency
+    );
 }
 ?>
 
