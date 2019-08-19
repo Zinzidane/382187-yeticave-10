@@ -30,9 +30,15 @@
                             <span class="lot__amount">Стартовая цена</span>
                             <span class="lot__cost"><?=add_currency_to_price(format_price(htmlspecialchars($lot['price'])), 'rub', 'р'); ?></span>
                         </div>
-                        <div class="lot__timer timer">
-                            12:23
+                        <?php if (get_dt_range($lot['date_end'])[0] < 1): ?>
+                        <div class="lot__timer timer--finishing">
+                            <?=implode(':', get_dt_range($lot['date_end']));?>
                         </div>
+                        <?php else: ?>
+                        <div class="lot__timer">
+                            <?=implode(':', get_dt_range($lot['date_end']));?>
+                        </div>
+                        <?php endif;?>
                     </div>
                 </div>
             </li>
