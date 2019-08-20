@@ -6,7 +6,7 @@ USE yeticave;
 
 CREATE TABLE category (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  name CHAR(255) NOT NULL
+  name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE lot (
@@ -16,9 +16,9 @@ CREATE TABLE lot (
   winner_id INT UNSIGNED,
   date_add DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   date_close DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  title CHAR(255) NOT NULL,
-  description TEXT,
-  image CHAR(255),
+  title VARCHAR(255) NOT NULL,
+  description VARCHAR(255),
+  image VARCHAR(255),
   initial_rate INT UNSIGNED NOT NULL,
   rate_step INT UNSIGNED NOT NULL
 );
@@ -34,13 +34,14 @@ CREATE TABLE bet (
 CREATE TABLE user (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   date_add DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  email CHAR(128) NOT NULL UNIQUE,
-  name CHAR(255) NOT NULL,
-  password CHAR(64) NOT NULL,
-  avatar CHAR(255),
+  email VARCHAR(128) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  password VARCHAR(64) NOT NULL,
+  avatar VARCHAR(255),
   contact TEXT
 );
 
 CREATE INDEX title ON lot(title);
+CREATE INDEX description ON lot(description);
 CREATE UNIQUE INDEX lot_id ON lot(id);
 CREATE UNIQUE INDEX email ON user(email);
