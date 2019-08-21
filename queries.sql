@@ -27,7 +27,8 @@ SELECT name FROM category;
 SELECT lot.title, lot.initial_rate, lot.image, category.name AS category, MAX(bet.rate) AS rate, COUNT(bet.lot_id) AS bets FROM lot
 JOIN category ON lot.category_id = category.id
 JOIN bet ON lot.id = bet.lot_id
-WHERE lot.date_close > NOW() AND lot.winner_id IS NULL;
+WHERE lot.date_close > NOW() AND lot.winner_id IS NULL
+GROUP BY lot.id;
 
 SELECT lot.id, lot.title, lot.initial_rate, lot.image, category.name AS category FROM lot
 JOIN category ON lot.category_id = category.id
