@@ -24,8 +24,9 @@ INSERT INTO bet (lot_id, user_id, rate) VALUES (2, @FIRST_USER_ID, 170000);
 
 SELECT name FROM category;
 
-SELECT lot.title, lot.initial_rate, lot.image, category.name AS category FROM lot
+SELECT lot.title, lot.initial_rate, lot.image, category.name AS category, MAX(bet.rate) AS rate, COUNT(bet.lot_id) AS bets FROM lot
 JOIN category ON lot.category_id = category.id
+JOIN bet ON lot.id = bet.lot_id
 WHERE lot.date_close > NOW() AND lot.winner_id IS NULL;
 
 SELECT lot.id, lot.title, lot.initial_rate, lot.image, category.name AS category FROM lot
