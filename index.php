@@ -7,7 +7,7 @@ if (!$link) {
     print($error);
 }
 else {
-    $categories_sql = 'SELECT name FROM category';
+    $categories_sql = 'SELECT name, symbol_code FROM category';
     $categories_result = mysqli_query($link, $categories_sql);
     $lots_sql = 'SELECT lot.title, lot.initial_rate, lot.image, lot.date_close, category.name AS category FROM lot '
     . 'JOIN category ON lot.category_id = category.id '
