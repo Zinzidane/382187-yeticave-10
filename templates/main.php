@@ -6,7 +6,7 @@
             <!--заполните этот список из массива категорий-->
             <?php foreach ($categories as $category): ?>
             <li class="promo__item promo__item--boards">
-                <a class="promo__link" href="pages/all-lots.html"><?=htmlspecialchars($category); ?></a>
+                <a class="promo__link" href="pages/all-lots.html"><?=htmlspecialchars($category['name']); ?></a>
             </li>
             <?php endforeach; ?>
         </ul>
@@ -20,23 +20,23 @@
             <?php foreach ($lots as $lot): ?>
             <li class="lots__item lot">
                 <div class="lot__image">
-                    <img src="<?=htmlspecialchars($lot['img']); ?>" width="350" height="260" alt="">
+                    <img src="<?=htmlspecialchars($lot['image']); ?>" width="350" height="260" alt="">
                 </div>
                 <div class="lot__info">
                     <span class="lot__category"><?=htmlspecialchars($lot['category']); ?></span>
-                    <h3 class="lot__title"><a class="text-link" href="pages/lot.html"><?=htmlspecialchars($lot['name']); ?></a></h3>
+                    <h3 class="lot__title"><a class="text-link" href="pages/lot.html"><?=htmlspecialchars($lot['title']); ?></a></h3>
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Стартовая цена</span>
-                            <span class="lot__cost"><?=add_currency_to_price(format_price(htmlspecialchars($lot['price'])), 'rub', 'р'); ?></span>
+                            <span class="lot__cost"><?=add_currency_to_price(format_price(htmlspecialchars($lot['initial_rate'])), 'rub', 'р'); ?></span>
                         </div>
-                        <?php if (get_dt_range($lot['date_end'])[0] < 1): ?>
+                        <?php if (get_dt_range($lot['date_close'])[0] < 1): ?>
                         <div class="lot__timer timer--finishing">
-                            <?=implode(':', get_dt_range($lot['date_end']));?>
+                            <?=implode(':', get_dt_range($lot['date_close']));?>
                         </div>
                         <?php else: ?>
                         <div class="lot__timer">
-                            <?=implode(':', get_dt_range($lot['date_end']));?>
+                            <?=implode(':', get_dt_range($lot['date_close']));?>
                         </div>
                         <?php endif;?>
                     </div>
