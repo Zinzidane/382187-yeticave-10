@@ -1,5 +1,5 @@
 <?php
-    $db = [
+    $connection = [
         'host' => 'localhost',
         'user' => 'root',
         'password' => '',
