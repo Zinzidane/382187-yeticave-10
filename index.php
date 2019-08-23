@@ -3,6 +3,7 @@ require_once('init.php');
 
 if (!$link) {
     $error = mysqli_connect_error();
+    print('Проблема с базой данных. Ожидайте пока исправим.')
     exit;
 }
 
@@ -18,7 +19,7 @@ $lots_result = mysqli_query($link, $lots_sql);
 
 if (!$categories_result || !$lots_result) {
     $error = mysqli_error($link);
-    exit;
+    print('Возникла проблема. Попробуйте еще раз.');
 }
 
 $is_auth = rand(0, 1);
