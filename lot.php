@@ -8,7 +8,7 @@ if (!$link) {
 }
 
 if (isset($_GET['id'])) {
-    $lot_id = $_GET['id'];
+    $lot_id = mysqli_real_escape_string($link, $_GET['id']);
     $categories_sql = 'SELECT name, symbol_code FROM category';
     $lot_sql = 'SELECT lot.title, lot.initial_rate, lot.rate_step, lot.image, lot.date_close, MAX(bet.rate) AS current_rate, category.name AS category, COUNT(bet.lot_id) AS bets_number FROM lot '
     . 'JOIN category ON lot.category_id = category.id '
