@@ -13,15 +13,9 @@
     </div>
     <div class="lot-item__right">
         <div class="lot-item__state">
-        <?php if (get_dt_range($lot['date_close'])[0] < 1): ?>
-        <div class="lot__timer timer--finishing">
+        <div class="<?=get_dt_range($lot['date_close'])[0] < 1 ? 'lot__timer timer--finishing' : 'lot__timer'?>">
             <?=implode(':', get_dt_range($lot['date_close']));?>
         </div>
-        <?php else: ?>
-        <div class="lot__timer">
-            <?=implode(':', get_dt_range($lot['date_close']));?>
-        </div>
-        <?php endif;?>
         <div class="lot-item__cost-state">
             <div class="lot-item__rate">
             <span class="lot-item__amount">Текущая цена</span>
