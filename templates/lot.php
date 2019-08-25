@@ -1,3 +1,6 @@
+<?php
+    $minimal_bet = get_minimal_bet($lot['initial_rate'], $lot['rate_step'], $lot['current_rate']);
+?>
 <section class="lot-item container">
     <h2><?=$lot['title']; ?></h2>
     <div class="lot-item__content">
@@ -25,14 +28,14 @@
             <span class="lot-item__cost"><?=add_currency_to_price(format_price(get_current_price($lot['initial_rate'], $lot['current_rate'])), 'rub', 'р'); ?></span>
             </div>
             <div class="lot-item__min-cost">
-            Мин. ставка <span><?=add_currency_to_price(get_minimal_bet($lot['initial_rate'], $lot['rate_step'], $lot['current_rate']), 'rub', 'р'); ?></span>
+            Мин. ставка <span><?=add_currency_to_price($minimal_bet, 'rub', 'р'); ?></span>
             </div>
         </div>
         <?php if ($is_auth): ?>
         <form class="lot-item__form" action="https://echo.htmlacademy.ru" method="post" autocomplete="off">
             <p class="lot-item__form-item form__item form__item--invalid">
             <label for="cost">Ваша ставка</label>
-            <input id="cost" type="text" name="cost" placeholder="<?=get_minimal_bet($lot['initial_rate'], $lot['rate_step'], $lot['current_rate']); ?>">
+            <input id="cost" type="text" name="cost" placeholder="<?=$minimal_bet; ?>">
             <span class="form__error">Введите наименование лота</span>
             </p>
             <button type="submit" class="button">Сделать ставку</button>
