@@ -21,7 +21,7 @@ function get_dt_range($date) {
     return [$hours, $minutes];
 }
 
-function calculate_current_price($initial_rate, $last_bet) {
+function get_current_price($initial_rate, $last_bet) {
     if ($last_bet) {
         return $last_bet;
     }
@@ -29,7 +29,7 @@ function calculate_current_price($initial_rate, $last_bet) {
     return $initial_rate;
 }
 
-function calculate_minimal_bet($initial_rate, $rate_step, $last_bet) {
+function get_minimal_bet($initial_rate, $rate_step, $last_bet) {
     if (!$last_bet) {
         return $initial_rate;
     }
