@@ -3,13 +3,13 @@ require_once('init.php');
 
 if (!$link) {
     $error = mysqli_connect_error();
-    print('Проблема с базой данных. Ожидайте пока исправим.')
+    print('Проблема с базой данных. Ожидайте пока исправим.');
     exit;
 }
 
 $categories_sql = 'SELECT name, symbol_code FROM category';
 $categories_result = mysqli_query($link, $categories_sql);
-$lots_sql = 'SELECT lot.title, lot.initial_rate, lot.image, lot.date_close, category.name AS category FROM lot '
+$lots_sql = 'SELECT lot.id, lot.title, lot.initial_rate, lot.image, lot.date_close, category.name AS category FROM lot '
 . 'JOIN category ON lot.category_id = category.id '
 . 'WHERE lot.date_close > NOW() AND lot.winner_id IS NULL '
 . 'GROUP BY lot.id '

@@ -37,8 +37,9 @@ WHERE lot.id = 1;
 
 UPDATE lot SET title = 'Новое название' WHERE id = 2;
 
-SELECT bet.rate as rate FROM lot
+SELECT bet.rate as rate, bet.date_add as date_add, user.name as user FROM lot
 JOIN bet ON lot.id = bet.lot_id
+JOIN user on user.id = bet.user_id
 WHERE lot.id = 1
 ORDER BY lot.date_add DESC;
 

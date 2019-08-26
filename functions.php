@@ -20,3 +20,19 @@ function get_dt_range($date) {
 
     return [$hours, $minutes];
 }
+
+function get_current_price($initial_rate, $last_bet) {
+    if ($last_bet) {
+        return $last_bet;
+    }
+
+    return $initial_rate;
+}
+
+function get_minimal_bet($initial_rate, $rate_step, $last_bet) {
+    if (!$last_bet) {
+        return $initial_rate;
+    }
+
+    return $last_bet + $rate_step;
+}
