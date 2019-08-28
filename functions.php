@@ -36,3 +36,40 @@ function get_minimal_bet($initial_rate, $rate_step, $last_bet) {
 
     return $last_bet + $rate_step;
 }
+
+function get_id($element) {
+    if ($element['id']) {
+        return $element['id'];
+    }
+}
+
+function validateCategory($name, $allowed_list) {
+    $id = $_POST[$name];
+
+    if (!in_array($id, $allowed_list)) {
+        // return "Указана несуществующая категория";
+        return $id;
+    }
+
+    return null;
+}
+
+function validateRate($name, $min) {
+    $rate = $_POST[$name];
+
+    if ($rate < $min) {
+        return "Значение должно быть больше $min";
+    }
+
+    return null;
+}
+
+function validateLength($name, $min, $max) {
+    $len = strlen($_POST[$name]);
+
+    if ($len < $min or $len > $max) {
+        return "Значение должно быть от $min до $max символов";
+    }
+
+    return null;
+}
