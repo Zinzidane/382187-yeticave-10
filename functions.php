@@ -43,6 +43,10 @@ function get_id($element) {
     }
 }
 
+function getPostVal($name) {
+    return $_POST[$name] ?? "";
+}
+
 function validateCategory($name, $allowed_list) {
     $id = $_POST[$name];
 
@@ -59,6 +63,10 @@ function validateRate($name, $min) {
 
     if ($rate < $min) {
         return "Значение должно быть больше $min";
+    }
+
+    if (!is_numeric($rate)) {
+        return "Значение должно быть численным";
     }
 
     return null;

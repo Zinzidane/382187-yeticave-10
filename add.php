@@ -24,7 +24,7 @@ else {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $lot = $_POST;
-        $required = ['title', 'category_id', 'description', 'initial_rate', 'rate_step', 'date_close', 'lot_image'];
+        $required = ['title', 'category_id', 'description', 'initial_rate', 'rate_step', 'date_close'];
         $errors = [];
 
         $rules = [
