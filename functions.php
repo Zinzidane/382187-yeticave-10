@@ -81,3 +81,57 @@ function validateLength($name, $min, $max) {
 
     return null;
 }
+
+function validate_form($lot, $categories_ids) {
+    $required = ['title', 'category_id', 'description', 'initial_rate', 'rate_step', 'date_close'];
+    $errors = [];
+
+    foreach ($lot as $key => $value) {
+        switch ($key) {
+            case 'category_id':
+                $errors[$key] = validateCategory('category_id', $categories_ids);
+                break;
+            case 'title':
+                $errors[$key] = validateLength('title', 1, 255);
+                break;
+            case 'description':
+                $errors[$key] = validateLength('description', 0, 255);
+                break;
+            case 'initial_rate':
+                $errors[$key] = validateRate('initial_rate', 0);
+                break;
+            case 'rate_step':
+                $errors[$key] = validateRate('rate', 0);
+                break;
+            case 'date_close':
+                $errors[$key] = is_date_valid('date_close');
+                break;
+        }
+     }
+
+    foreach ($required as $key) {
+        if (empty($lot[$key])) {
+            $errors[$key] = 'Это поле надо заполнить';
+        }
+    }
+
+    if (isset($_FILES['lot_image']['name'])) {
+        $tmp_name = $_FILES['lot_image']['tmp_name'];
+        $path = $_FILES['lot_image']['name'];
+        $filename = uniqid() . '.jpeg';
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $file_type = finfo_file($finfo, $tmp_name);
+
+        if ($file_type !== "image/jpeg") {
+            $errors['file'] = 'Загрузите картинку в формате JPEG';
+        } else {
+            move_uploaded_file($tmp_name, __DIR__ . '/uploads/' . $filename);
+            $lot['image'] = $filename;
+        }
+    } else {
+        $errors['file'] = 'Вы не загрузили файл';
+    }
+
+    return $errors;
+}
