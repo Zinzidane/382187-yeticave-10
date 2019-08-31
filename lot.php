@@ -47,5 +47,4 @@ $layout_content = include_template('layout.php', [
     'categories' => $categories
 ]);
 
-
 print($layout_content);

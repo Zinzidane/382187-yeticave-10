@@ -43,7 +43,7 @@ function get_id($element) {
     }
 }
 
-function getPostVal($name) {
+function get_post_val($name) {
     return $_POST[$name] ?? "";
 }
 
@@ -85,9 +85,6 @@ function validate_text($lot, $categories_ids) {
         switch ($key) {
             case 'category_id':
                 $errors[$key] = validate_category($value, $categories_ids);
-                if (empty($lot[$key])) {
-                    $errors[$key] = 'Это поле надо заполнить';
-                }
                 break;
             case 'title':
                 $errors[$key] = validate_length($value, 1, 255);
@@ -110,11 +107,11 @@ function validate_text($lot, $categories_ids) {
     return array_filter($errors);
 }
 
-function validate_required_fields($lot, $required) {
+function validate_required_fields($form, $required) {
     $errors = [];
 
     foreach ($required as $key) {
-        if (empty($lot[$key])) {
+        if (empty($form[$key])) {
             $errors[$key] = 'Это поле надо заполнить';
         }
     }
@@ -140,7 +137,7 @@ function validate_image($lot) {
     return array_filter($errors);
 }
 
-function validate_form($lot, $categories_ids) {
+function validate_lot_form($lot, $categories_ids) {
     $required = ['title', 'category_id', 'description', 'initial_rate', 'rate_step', 'date_close'];
 
     $errors_text = validate_text($lot, $categories_ids);
@@ -155,9 +152,30 @@ function handle_image_upload($file_field) {
     $tmp_name = $file_field['tmp_name'];
     $path = $file_field['name'];
     $filename = uniqid() . '.jpeg';
+    $filepath = 'uploads/' . $filename;
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $file_type = finfo_file($finfo, $tmp_name);
     move_uploaded_file($tmp_name, __DIR__ . '/uploads/' . $filename);
 
-    return $filename;
+    return $filepath;
+}
+
+function validate_email($email) {
+    $errors = [];
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = 'Введите валидный электронный адрес';
+    }
+
+    return array_filter($errors);
+}
+
+function validate_signup_form($signup_form) {
+    $required = ['email', 'password', 'name', 'message'];
+
+    $errors_email = validate_email($signup_form['email']);
+    $errors_required_fields = validate_required_fields($signup_form, $required);
+    $errors_signup_form = array_merge($errors_email, $errors_required_fields);
+
+    return $errors_signup_form;
 }
