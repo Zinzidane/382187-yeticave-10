@@ -22,21 +22,22 @@ $content = include_template('add.php', ['categories' => $categories]);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lot = $_POST;
-
     $errors = validate_form($lot, $categories_ids);
 
     if (count($errors)) {
         $page_content = include_template('add.php', ['lot' => $lot, 'errors' => $errors, 'categories' => $categories]);
     } else {
+        $lot['image'] =  handle_image_upload($_FILES['lot_image']);
+        // На время пока нет авторизации
+        $user_id = 2;
+        $lot['user_id'] = $user_id;
 
-        $sql = 'INSERT INTO lot (title, category_id, description, initial_rate, rate_step, date_close, image, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, 2)';
+        $add_lot_sql = 'INSERT INTO lot (title, category_id, description, initial_rate, rate_step, date_close, image, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+        $stmt = db_get_prepare_stmt($link, $add_lot_sql, $lot);
+        $add_lot_res = mysqli_stmt_execute($stmt);
 
-        $stmt = db_get_prepare_stmt($link, $sql, $lot);
-        $res = mysqli_stmt_execute($stmt);
-
-        if ($res) {
+        if ($add_lot_res) {
             $lot_id = mysqli_insert_id($link);
-
             header("Location: lot.php?id=" . $lot_id);
         } else {
             print('Проблема с отправкой данных');

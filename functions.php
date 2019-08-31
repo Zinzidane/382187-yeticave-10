@@ -47,9 +47,7 @@ function getPostVal($name) {
     return $_POST[$name] ?? "";
 }
 
-function validateCategory($name, $allowed_list) {
-    $id = $_POST[$name];
-
+function validate_category($id, $allowed_list) {
     if (!in_array($id, $allowed_list)) {
         // return "Указана несуществующая категория";
         return $id;
@@ -58,9 +56,7 @@ function validateCategory($name, $allowed_list) {
     return null;
 }
 
-function validateRate($name, $min) {
-    $rate = $_POST[$name];
-
+function validate_rate($rate, $min) {
     if ($rate < $min) {
         return "Значение должно быть больше $min";
     }
@@ -72,8 +68,8 @@ function validateRate($name, $min) {
     return null;
 }
 
-function validateLength($name, $min, $max) {
-    $len = strlen($_POST[$name]);
+function validate_length($field, $min, $max) {
+    $len = strlen($field);
 
     if ($len < $min or $len > $max) {
         return "Значение должно быть от $min до $max символов";
@@ -82,32 +78,40 @@ function validateLength($name, $min, $max) {
     return null;
 }
 
-function validate_form($lot, $categories_ids) {
-    $required = ['title', 'category_id', 'description', 'initial_rate', 'rate_step', 'date_close'];
+function validate_text($lot, $categories_ids) {
     $errors = [];
 
     foreach ($lot as $key => $value) {
         switch ($key) {
             case 'category_id':
-                $errors[$key] = validateCategory('category_id', $categories_ids);
+                $errors[$key] = validate_category($value, $categories_ids);
+                if (empty($lot[$key])) {
+                    $errors[$key] = 'Это поле надо заполнить';
+                }
                 break;
             case 'title':
-                $errors[$key] = validateLength('title', 1, 255);
+                $errors[$key] = validate_length($value, 1, 255);
                 break;
             case 'description':
-                $errors[$key] = validateLength('description', 0, 255);
+                $errors[$key] = validate_length($value, 0, 255);
                 break;
             case 'initial_rate':
-                $errors[$key] = validateRate('initial_rate', 0);
+                $errors[$key] = validate_rate($value, 0);
                 break;
             case 'rate_step':
-                $errors[$key] = validateRate('rate', 0);
+                $errors[$key] = validate_rate($value, 0);
                 break;
             case 'date_close':
-                $errors[$key] = is_date_valid('date_close');
+                $errors[$key] = is_date_valid($key);
                 break;
         }
-     }
+    }
+
+    return array_filter($errors);
+}
+
+function validate_required_fields($lot, $required) {
+    $errors = [];
 
     foreach ($required as $key) {
         if (empty($lot[$key])) {
@@ -115,23 +119,45 @@ function validate_form($lot, $categories_ids) {
         }
     }
 
+    return array_filter($errors);
+}
+
+function validate_image($lot) {
+    $errors = [];
+
     if (isset($_FILES['lot_image']['name'])) {
         $tmp_name = $_FILES['lot_image']['tmp_name'];
-        $path = $_FILES['lot_image']['name'];
-        $filename = uniqid() . '.jpeg';
-
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $file_type = finfo_file($finfo, $tmp_name);
 
         if ($file_type !== "image/jpeg") {
             $errors['file'] = 'Загрузите картинку в формате JPEG';
-        } else {
-            move_uploaded_file($tmp_name, __DIR__ . '/uploads/' . $filename);
-            $lot['image'] = $filename;
         }
     } else {
         $errors['file'] = 'Вы не загрузили файл';
     }
 
-    return $errors;
+    return array_filter($errors);
+}
+
+function validate_form($lot, $categories_ids) {
+    $required = ['title', 'category_id', 'description', 'initial_rate', 'rate_step', 'date_close'];
+
+    $errors_text = validate_text($lot, $categories_ids);
+    $errors_required_fields = validate_required_fields($lot, $required);
+    $errors_image = validate_image($lot);
+    $errors_form = array_merge($errors_text, $errors_required_fields, $errors_image);
+
+    return $errors_form;
+}
+
+function handle_image_upload($file_field) {
+    $tmp_name = $file_field['tmp_name'];
+    $path = $file_field['name'];
+    $filename = uniqid() . '.jpeg';
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $file_type = finfo_file($finfo, $tmp_name);
+    move_uploaded_file($tmp_name, __DIR__ . '/uploads/' . $filename);
+
+    return $filename;
 }
