@@ -175,7 +175,6 @@ function validate_signup_form($signup_form) {
 
     $errors_email = validate_email($signup_form['email']);
     $errors_required_fields = validate_required_fields($signup_form, $required);
-    $errors_signup_form = array_merge($errors_email, $errors_required_fields);
 
-    return $errors_signup_form;
+    return array_merge($errors_email, $errors_required_fields);
 }
