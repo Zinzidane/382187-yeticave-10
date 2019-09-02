@@ -38,11 +38,11 @@ else {
     header("HTTP/1.0 404 Not Found");
 }
 
-$page_content = include_template('lot.php', ['lot' => $lot, 'bets' => $bets, 'is_auth' => $is_auth]);
+$page_content = include_template('lot.php', ['lot' => $lot, 'bets' => $bets, 'is_auth' => isset($_SESSION['user'])]);
 $layout_content = include_template('layout.php', [
     'title' => 'Главная',
-    'username' => 'Ваня',
-    'is_auth' => $is_auth,
+    'username' => isset($_SESSION['user']) ? $_SESSION['user']['name'] : null,
+    'is_auth' => isset($_SESSION['user']),
     'content' => $page_content,
     'categories' => $categories
 ]);

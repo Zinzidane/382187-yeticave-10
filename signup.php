@@ -16,8 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         $user_find_sql = 'SELECT id FROM user WHERE email = ? ';
         $user_find_stmt = db_get_prepare_stmt($link, $user_find_sql, [$signup_form['email']]);
+        $user_find_res = mysqli_stmt_execute($user_find_stmt);
 
-        if (mysqli_num_rows(mysqli_stmt_get_result($user_find_stmt))) {
+        if (mysqli_num_rows(mysqli_fetch_assoc(mysqli_stmt_get_result($user_find_stmt)))) {
             $errors['email'] = 'Пользователь с этим email уже зарегистрирован';
             $page_content = include_template('signup.php', ['signup_form' => $signup_form, 'errors' => $errors]);
         } else {
@@ -38,8 +39,8 @@ $page_content = include_template('signup.php', ['signup_form' => $signup_form, '
 
 $layout_content = include_template('layout.php', [
     'title' => 'Yeticave | Регистрация',
-    'username' => 'Ваня',
-    'is_auth' => $is_auth,
+    'username' => isset($_SESSION['user']) ? $_SESSION['user']['name'] : null,
+    'is_auth' => isset($_SESSION['user']),
     'content'=> $page_content,
     'categories' => []
 ]);

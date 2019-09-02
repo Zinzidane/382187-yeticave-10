@@ -178,3 +178,9 @@ function validate_signup_form($signup_form) {
 
     return array_merge($errors_email, $errors_required_fields);
 }
+
+function validate_signin_form($signin_form) {
+    $required = ['email', 'password'];
+
+    return validate_required_fields($signin_form, $required);
+}

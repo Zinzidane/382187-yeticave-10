@@ -18,7 +18,7 @@ if ($result) {
     header("HTTP/1.0 404 Not Found");
 }
 
-$content = include_template('add.php', ['categories' => $categories]);
+$page_content = include_template('add.php', ['categories' => $categories]);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lot = $_POST;
@@ -29,8 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         $lot['image'] =  handle_image_upload($_FILES['lot_image']);
         // На время пока нет авторизации
-        $user_id = 2;
-        $lot['user_id'] = $user_id;
+        $lot['user_id'] = $_SESSION['user']['id'];
 
         $add_lot_sql = 'INSERT INTO lot (title, category_id, description, initial_rate, rate_step, date_close, image, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
         $stmt = db_get_prepare_stmt($link, $add_lot_sql, $lot);
@@ -44,13 +43,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 } else {
+    if (!isset($_SESSION['user'])) {
+        header("Location: /index.php");
+        exit();
+    }
     $page_content = include_template('add.php', ['categories' => $categories]);
 }
 
 $layout_content = include_template('layout.php', [
     'title' => 'Добавить лот',
-    'username' => 'Ваня',
-    'is_auth' => $is_auth,
+    'username' => isset($_SESSION['user']) ? $_SESSION['user']['name'] : null,
+    'is_auth' => isset($_SESSION['user']),
     'content' => $page_content,
     'categories' => $categories
 ]);

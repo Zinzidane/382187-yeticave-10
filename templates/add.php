@@ -1,13 +1,12 @@
 <?php $classname = (isset($errors)) ? "form--invalid" : ""; ?>
-<form class="form form--add-lot container <?=$classname; ?>" enctype="multipart/form-data" action="add.php" method="post"> <!-- form--invalid -->
+<form class="form form--add-lot container <?=$classname; ?>" enctype="multipart/form-data" action="add.php" method="post">
     <h2>Добавление лота</h2>
     <div class="form__container-two">
     <?php $classname = isset($errors['title']) ? "form__item--invalid" : ""; ?>
-    <div class="form__item <?=$classname; ?>"> <!-- form__item--invalid -->
+    <div class="form__item <?=$classname; ?>">
         <label for="lot-name">Наименование <sup>*</sup></label>
-        <input id="lot-name" type="text" name="title" value="<?=getPostVal('title'); ?>" placeholder="Введите наименование лота">
+        <input id="lot-name" type="text" name="title" value="<?=get_post_val('title'); ?>" placeholder="Введите наименование лота">
         <span class="form__error"><?=$errors['title']; ?></span>
-
     </div>
     <?php $classname = isset($errors['category_id']) ? "form__item--invalid" : ""; ?>
     <div class="form__item <?=$classname; ?>">
@@ -25,7 +24,7 @@
     <?php $classname = isset($errors['description']) ? "form__item--invalid" : ""; ?>
     <div class="form__item form__item--wide <?=$classname; ?>">
         <label for="message">Описание <sup>*</sup></label>
-        <textarea id="message" name="description" placeholder="Напишите описание лота"><?=getPostVal('description'); ?></textarea>
+        <textarea id="message" name="description" placeholder="Напишите описание лота"><?=get_post_val('description'); ?></textarea>
         <span class="form__error"><?=$errors['description']; ?></span>
     </div>
     <?php $classname = isset($errors['file']) ? "form__item--invalid" : ""; ?>
@@ -43,19 +42,19 @@
     <?php $classname = isset($errors['initial_rate']) ? "form__item--invalid" : ""; ?>
     <div class="form__item form__item--small <?=$classname; ?>">
         <label for="lot-rate">Начальная цена <sup>*</sup></label>
-        <input id="lot-rate" type="text" name="initial_rate" value="<?=getPostVal('initial_rate'); ?>" placeholder="0">
+        <input id="lot-rate" type="text" name="initial_rate" value="<?=get_post_val('initial_rate'); ?>" placeholder="0">
         <span class="form__error"><?=$errors['initial_rate']; ?></span>
     </div>
     <?php $classname = isset($errors['rate_step']) ? "form__item--invalid" : ""; ?>
     <div class="form__item form__item--small <?=$classname; ?>">
         <label for="lot-step">Шаг ставки <sup>*</sup></label>
-        <input id="lot-step" type="text" name="rate_step" value="<?=getPostVal('rate_step'); ?>" placeholder="0">
+        <input id="lot-step" type="text" name="rate_step" value="<?=get_post_val('rate_step'); ?>" placeholder="0">
         <span class="form__error"><?=$errors['rate_step']; ?></span>
     </div>
     <?php $classname = isset($errors['date_close']) ? "form__item--invalid" : ""; ?>
     <div class="form__item <?=$classname; ?>">
         <label for="lot-date">Дата окончания торгов <sup>*</sup></label>
-        <input class="form__input-date" id="lot-date" type="text"  value="<?=getPostVal('date_close'); ?>" name="date_close" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
+        <input class="form__input-date" id="lot-date" type="text"  value="<?=get_post_val('date_close'); ?>" name="date_close" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
         <span class="form__error"><?=$errors['date_close']; ?></span>
     </div>
     </div>
