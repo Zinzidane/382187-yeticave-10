@@ -1,5 +1,5 @@
 <?php
-require_once 'init.php';
+require_once('init.php');
 
 if (!$link) {
     $error = mysqli_connect_error();
@@ -22,7 +22,7 @@ $content = include_template('add.php', ['categories' => $categories]);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lot = $_POST;
-    $errors = validate_form($lot, $categories_ids);
+    $errors = validate_lot_form($lot, $categories_ids);
 
     if (count($errors)) {
         $page_content = include_template('add.php', ['lot' => $lot, 'errors' => $errors, 'categories' => $categories]);
