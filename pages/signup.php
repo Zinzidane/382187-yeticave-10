@@ -34,8 +34,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             exit;
         }
     }
+}  else {
+    if (isset($_SESSION['user'])) {
+        header("Location: /index.php");
+        exit();
+    }
+    $page_content = include_template('signup.php', ['signup_form' => $signup_form, 'errors' => $errors]);
 }
-$page_content = include_template('signup.php', ['signup_form' => $signup_form, 'errors' => $errors]);
 
 $layout_content = include_template('layout.php', [
     'title' => 'Yeticave | Регистрация',
