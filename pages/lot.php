@@ -29,7 +29,6 @@ if (isset($_GET['id'])) {
         $error = mysqli_error($link);
         header("HTTP/1.0 404 Not Found");
     }
-    $is_auth = rand(0, 1);
     $categories = mysqli_fetch_all($categories_result, MYSQLI_ASSOC);
     $lot = mysqli_fetch_all($lot_result, MYSQLI_ASSOC)[0];
     $bets = mysqli_fetch_all($bets_result, MYSQLI_ASSOC);
@@ -38,11 +37,11 @@ else {
     header("HTTP/1.0 404 Not Found");
 }
 
-$page_content = include_template('lot.php', ['lot' => $lot, 'bets' => $bets, 'is_auth' => isset($_SESSION['user'])]);
+$page_content = include_template('lot.php', ['lot' => $lot, 'bets' => $bets, 'is_auth' => is_auth()]);
 $layout_content = include_template('layout.php', [
     'title' => 'Главная',
-    'username' => isset($_SESSION['user']) ? $_SESSION['user']['name'] : null,
-    'is_auth' => isset($_SESSION['user']),
+    'username' => get_username(),
+    'is_auth' => is_auth(),
     'content' => $page_content,
     'categories' => $categories
 ]);

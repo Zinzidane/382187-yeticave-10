@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } else {
     $page_content = include_template('signin.php', []);
 
-    if (isset($_SESSION['user'])) {
+    if (is_auth()) {
         header("Location: /index.php");
         exit();
     }
@@ -51,8 +51,8 @@ $page_content = include_template('signin.php', ['signin_form' => $signin_form, '
 
 $layout_content = include_template('layout.php', [
     'title' => 'Yeticave | Вход',
-    'username' => isset($_SESSION['user']) ? $_SESSION['user']['name'] : null,
-    'is_auth' => isset($_SESSION['user']),
+    'username' => get_username(),
+    'is_auth' => is_auth(),
     'content'=> $page_content,
     'categories' => []
 ]);

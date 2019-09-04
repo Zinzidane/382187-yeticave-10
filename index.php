@@ -29,8 +29,8 @@ $lots = mysqli_fetch_all($lots_result, MYSQLI_ASSOC);
 $page_content = include_template('main.php', ['categories' => $categories, 'lots' => $lots]);
 $layout_content = include_template('layout.php', [
     'title' => 'Главная',
-    'username' => isset($_SESSION['user']) ? $_SESSION['user']['name'] : null,
-    'is_auth' => isset($_SESSION['user']),
+    'username' => get_username(),
+    'is_auth' => is_auth(),
     'content' => $page_content,
     'categories' => $categories
 ]);

@@ -184,3 +184,11 @@ function validate_signin_form($signin_form) {
 
     return validate_required_fields($signin_form, $required);
 }
+
+function get_username() {
+    return isset($_SESSION['user']) ? $_SESSION['user']['name'] : null;
+}
+
+function is_auth() {
+    return isset($_SESSION['user']);
+}

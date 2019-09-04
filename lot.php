@@ -19,8 +19,6 @@ if (isset($_GET['id'])) {
     . 'JOIN user on user.id = bet.user_id '
     . 'WHERE lot.id = ' . $lot_id
     . ' ORDER BY lot.date_add DESC';
-
-
     $categories_result = mysqli_query($link, $categories_sql);
     $lot_result = mysqli_query($link, $lot_sql);
     $bets_result = mysqli_query($link, $bets_sql);
@@ -38,11 +36,11 @@ else {
     header("HTTP/1.0 404 Not Found");
 }
 
-$page_content = include_template('lot.php', ['lot' => $lot, 'bets' => $bets, 'is_auth' => isset($_SESSION['user'])]);
+$page_content = include_template('lot.php', ['lot' => $lot, 'bets' => $bets, 'is_auth' => is_auth()]);
 $layout_content = include_template('layout.php', [
     'title' => 'Главная',
-    'username' => isset($_SESSION['user']) ? $_SESSION['user']['name'] : null,
-    'is_auth' => isset($_SESSION['user']),
+    'username' => get_username(),
+    'is_auth' => is_auth(),
     'content' => $page_content,
     'categories' => $categories
 ]);

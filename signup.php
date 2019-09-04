@@ -39,8 +39,8 @@ $page_content = include_template('signup.php', ['signup_form' => $signup_form, '
 
 $layout_content = include_template('layout.php', [
     'title' => 'Yeticave | Регистрация',
-    'username' => isset($_SESSION['user']) ? $_SESSION['user']['name'] : null,
-    'is_auth' => isset($_SESSION['user']),
+    'username' => get_username(),
+    'is_auth' => is_auth(),
     'content'=> $page_content,
     'categories' => []
 ]);

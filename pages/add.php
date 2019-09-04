@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 } else {
-    if (!isset($_SESSION['user'])) {
+    if (!is_auth()) {
         header("Location: /index.php");
         exit();
     }
@@ -52,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $layout_content = include_template('layout.php', [
     'title' => 'Добавить лот',
-    'username' => isset($_SESSION['user']) ? $_SESSION['user']['name'] : null,
-    'is_auth' => isset($_SESSION['user']),
+    'username' => get_username(),
+    'is_auth' => is_auth(),
     'content' => $page_content,
     'categories' => $categories
 ]);
