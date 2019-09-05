@@ -178,3 +178,17 @@ function validate_signup_form($signup_form) {
 
     return array_merge($errors_email, $errors_required_fields);
 }
+
+function validate_signin_form($signin_form) {
+    $required = ['email', 'password'];
+
+    return validate_required_fields($signin_form, $required);
+}
+
+function get_username() {
+    return isset($_SESSION['user']) ? $_SESSION['user']['name'] : null;
+}
+
+function is_auth() {
+    return isset($_SESSION['user']);
+}
