@@ -12,13 +12,49 @@ function add_currency_to_price($price, $className, $currency) {
 
 function get_dt_range($date) {
     // В одном дне 86400 секунд
-    $ts_midnight = strtotime($date);
-    $secs_to_midnight = $ts_midnight - time();
+    $end_date = strtotime($date);
+    $secs_to_end = $end_date - time();
 
-    $hours = str_pad(floor($secs_to_midnight / 3600), 2, "0", STR_PAD_LEFT);
-    $minutes = str_pad(floor(($secs_to_midnight % 3600) / 60), 2, "0", STR_PAD_LEFT);
+    $hours = str_pad(floor($secs_to_end / 3600), 2, "0", STR_PAD_LEFT);
+    $minutes = str_pad(floor(($secs_to_end % 3600) / 60), 2, "0", STR_PAD_LEFT);
 
     return [$hours, $minutes];
+}
+
+function get_time_left($end_time) {
+    date_default_timezone_set('Europe/Moscow');
+    $timer = strtotime($end_time) - strtotime('now');
+    if ($timer <=0 ) {
+        return 0;
+    }
+    $days = floor($timer / 86400);
+    $timer = $timer - ($days * 86400);
+    $hours = floor($timer / 3600);
+    $timer = $timer - ($hours * 3600);
+    $minutes = floor($timer / 60);
+
+    if ($days <= 0) {
+        return sprintf('%02d', $hours) . ':' . sprintf('%02d', $minutes);
+    }
+    if ($days <= 0 && $hours <= 0) {
+        return sprintf('%02d', $minutes);
+    }
+
+    return sprintf('%02d', $days) . ':' . sprintf('%02d', $hours) . ':' . sprintf('%02d', $minutes);
+}
+
+function get_bet_info($bet) {
+    $end_time = $bet['date_close'];
+    $end_time_result =  get_time_left($end_time);
+
+    if ($bet['winner_id'] == $_SESSION['user']['id']) {
+        return "Ставка выиграла";
+    }
+    if ($end_time_result <= 0) {
+        return "Торги окончены";
+    }
+
+    return $end_time_result;
 }
 
 function get_current_price($initial_rate, $last_bet) {
@@ -191,4 +227,75 @@ function get_username() {
 
 function is_auth() {
     return isset($_SESSION['user']);
+}
+
+function validate_bet_form($bet, $lot) {
+    $errors = [];
+    $min_cost = $lot['current_rate'] + $lot['rate_step'];
+
+    if (!is_int($bet)) {
+        $errors['cost'] = 'Ставка должна быть целым числом';
+    }
+
+    if ($bet < $min_cost) {
+        $errors['cost'] = 'Ставка не может быть меньше '. $min_cost .' ₽';
+    }
+
+    return array_filter($errors);
+}
+
+function format_date_back($date_add) {
+    $timer = time() - strtotime($date_add);
+    if ($timer <=0 ) {
+        return 0;
+    }
+
+    $days = floor($timer / 86400);
+    $timer = $timer - ($days * 86400);
+    $hours = floor($timer / 3600);
+    $timer = $timer - ($hours * 3600);
+    $minutes = floor($timer / 60);
+
+    if ($days === 1) {
+        return 'Вчера, в ' . $date_add;
+    }
+
+    if ($days <= 0) {
+        return $hours . ' ' . get_noun_plural_form($hours, 'час', 'часа', 'часов') . ' назад';
+    }
+
+    if ($days <= 0 && $hours <= 0) {
+        return $minutes . ' ' . get_noun_plural_form($minutes, 'минуту', 'минуты', 'минут') . ' назад';
+    }
+
+    return $days . ' ' . get_noun_plural_form($days, 'день', 'дня', 'дней') . ' назад';
+}
+
+function format_passed_time($time, $one, $two, $many) {
+    return sprintf('%s %s назад', $time, get_noun_plural_form($time, $one, $two, $many));
+}
+
+function get_passed_time($date_add, $time_format = 'H:i', $month_format = 'H:i d/m', $year_format = 'H:i d/m/Y') { // преобразовываем время в нормальный вид
+    $date = new \DateTime($date_add);
+    $today = new \DateTime('now', $date->getTimezone());
+    $yesterday = new \DateTime('-1 day', $date->getTimezone());
+    $tomorrow = new \DateTime('+1 day', $date->getTimezone());
+    $minutes_ago = floor(($today->format('U') - $date->format('U')) / 60);
+    $hours_ago = floor(($today->format('U') - $date->format('U')) / 3660);
+
+    if ($minutes_ago == 0) {
+        return 'Меньше минуты назад';
+    } else if ($minutes_ago > 0 && $minutes_ago < 60) {
+        return format_passed_time($minutes_ago, 'минута', 'минуты', 'минут');
+    } elseif ($hours_ago > 0 && $hours_ago < 24 && $today->format('ymd') == $date->format('ymd')) {
+        return format_passed_time($hours_ago, 'час', 'часа', 'часов');
+    } elseif ($today->format('ymd') == $date->format('ymd')) {
+        return sprintf('Сегодня в %s', $date->format($time_format));
+    } elseif ($yesterday->format('ymd') == $date->format('ymd')) {
+        return sprintf('Вчера в %s', $date->format($time_format));
+    } elseif ($today->format('Y') == $date->format('Y')) {
+        return $date->format($month_format);
+    } else {
+        return $date->format($year_format);
+    }
 }
