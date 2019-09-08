@@ -23,14 +23,14 @@ function get_dt_range($date) {
 
 function get_time_left($end_time) {
     $timer = strtotime($end_time) - strtotime('now');
+
     if ($timer <=0 ) {
         return 0;
     }
+
     $days = floor($timer / 86400);
-    $timer = $timer - ($days * 86400);
-    $hours = floor($timer / 3600);
-    $timer = $timer - ($hours * 3600);
-    $minutes = floor($timer / 60);
+    $hours = floor($days % 86400 / 3600);
+    $minutes = floor($hours % 3600 / 60);
 
     if ($days <= 0 && $hours <= 0) {
         return sprintf('%02d', $minutes);
@@ -251,15 +251,14 @@ function validate_bet_form($bet, $lot) {
 
 function format_date_back($date_add) {
     $timer = time() - strtotime($date_add);
+
     if ($timer <=0 ) {
         return 0;
     }
 
     $days = floor($timer / 86400);
-    $timer = $timer - ($days * 86400);
-    $hours = floor($timer / 3600);
-    $timer = $timer - ($hours * 3600);
-    $minutes = floor($timer / 60);
+    $hours = floor($days % 86400 / 3600);
+    $minutes = floor($hours % 3600 / 60);
 
     if ($days === 1) {
         return 'Вчера, в ' . $date_add;
