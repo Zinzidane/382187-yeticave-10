@@ -51,6 +51,7 @@ function get_bet_info($bet, $user_id) {
     if ($bet['winner_id'] == $user_id) {
         return "Ставка выиграла";
     }
+
     if ($end_time_result <= 0) {
         return "Торги окончены";
     }
@@ -90,7 +91,6 @@ function get_post_val($name) {
 
 function validate_category($id, $allowed_list) {
     if (!in_array($id, $allowed_list)) {
-        // return "Указана несуществующая категория";
         return $id;
     }
 
