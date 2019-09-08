@@ -8,27 +8,33 @@ if (!$link) {
 }
 
 if (isset($_GET['id'])) {
-    $lot_id = mysqli_real_escape_string($link, $_GET['id']);
+    $lot_id = $_GET['id'];
     $categories_sql = 'SELECT name, symbol_code FROM category';
-    $lot_sql = 'SELECT lot.title, lot.user_id, lot.initial_rate, lot.rate_step, lot.image, lot.date_close, MAX(bet.rate) AS current_rate, category.name AS category, COUNT(bet.lot_id) AS bets_number FROM lot '
-    . 'JOIN category ON lot.category_id = category.id '
-    . 'JOIN bet ON lot.id = bet.lot_id '
-    . 'WHERE lot.id = ' . $lot_id;
-    $bets_sql = 'SELECT bet.rate as rate, bet.date_add as date_add, user.name as user FROM lot '
-    . 'JOIN bet ON lot.id = bet.lot_id '
-    . 'JOIN user on user.id = bet.user_id '
-    . 'WHERE lot.id = ' . $lot_id
-    . ' ORDER BY lot.date_add DESC';
-    $categories_result = mysqli_query($link, $categories_sql);
-    $lot_result = mysqli_query($link, $lot_sql);
-    $bets_result = mysqli_query($link, $bets_sql);
-    if (!$categories_result || !$lot_result || !$bets_result) {
+    $categories_res = mysqli_query($link, $categories_sql);
+    $lot_sql = "SELECT lot.title, lot.initial_rate, lot.rate_step, lot.image, lot.date_close, MAX(bet.rate) AS current_rate, category.name AS category, COUNT(bet.lot_id) AS bets_number FROM lot
+    INNER JOIN category ON lot.category_id = category.id
+    LEFT JOIN bet ON lot.id = bet.lot_id
+    WHERE lot.id = ?
+    "
+    ;
+
+    $lot_stmt = db_get_prepare_stmt($link, $lot_sql, [$lot_id]);
+    $lot_res = mysqli_stmt_execute($lot_stmt);
+    $bets_sql = "SELECT bet.rate as rate, bet.date_add as date_add, user.name as user FROM lot "
+    . "JOIN bet ON lot.id = bet.lot_id "
+    . "JOIN user on user.id = bet.user_id "
+    . "WHERE lot.id = ? "
+    . "ORDER BY lot.date_add DESC";
+
+    $bets_stmt = db_get_prepare_stmt($link, $bets_sql, [$lot_id]);
+    $bet_res = mysqli_stmt_execute($bets_stmt);
+    if (!$categories_res || !$lot_res || !$bets_res) {
         $error = mysqli_error($link);
         header("HTTP/1.0 404 Not Found");
     }
     $categories = mysqli_fetch_all($categories_result, MYSQLI_ASSOC);
-    $lot = mysqli_fetch_all($lot_result, MYSQLI_ASSOC)[0];
-    $bets = mysqli_fetch_all($bets_result, MYSQLI_ASSOC);
+    $lot = mysqli_fetch_assoc(mysqli_stmt_get_result($lot_stmt));
+    $bets = mysqli_fetch_assoc(mysqli_stmt_get_result($bets_stmt));
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['cost']) {
         $bet = (int) $_POST['cost'];

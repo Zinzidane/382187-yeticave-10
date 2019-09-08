@@ -266,11 +266,11 @@ function format_date_back($date_add) {
     }
 
     if ($days <= 0) {
-        return $hours . ' ' . get_noun_plural_form($hours, 'час', 'часа', 'часов') . ' назад';
+        return $hours . ' ' . get_noun_plural_form($hours, ...get_plural_noun_array('час')) . ' назад';
     }
 
     if ($days <= 0 && $hours <= 0) {
-        return $minutes . ' ' . get_noun_plural_form($minutes, 'минуту', 'минуты', 'минут') . ' назад';
+        return $minutes . ' ' . get_noun_plural_form($minutes, ...get_plural_noun_array('минута')) . ' назад';
     }
 
     return $days . ' ' . get_noun_plural_form($days, 'день', 'дня', 'дней') . ' назад';
