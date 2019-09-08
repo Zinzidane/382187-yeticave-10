@@ -22,7 +22,6 @@ function get_dt_range($date) {
 }
 
 function get_time_left($end_time) {
-    date_default_timezone_set('Europe/Moscow');
     $timer = strtotime($end_time) - strtotime('now');
     if ($timer <=0 ) {
         return 0;
@@ -33,21 +32,23 @@ function get_time_left($end_time) {
     $timer = $timer - ($hours * 3600);
     $minutes = floor($timer / 60);
 
-    if ($days <= 0) {
-        return sprintf('%02d', $hours) . ':' . sprintf('%02d', $minutes);
-    }
     if ($days <= 0 && $hours <= 0) {
         return sprintf('%02d', $minutes);
     }
 
-    return sprintf('%02d', $days) . ':' . sprintf('%02d', $hours) . ':' . sprintf('%02d', $minutes);
+    if ($days <= 0) {
+        return sprintf('%02d:%02d', $hours, $minutes);
+    }
+
+
+    return sprintf('%02d:%02d:%02d', $days, $hours, $minutes);
 }
 
-function get_bet_info($bet) {
+function get_bet_info($bet, $user_id) {
     $end_time = $bet['date_close'];
     $end_time_result =  get_time_left($end_time);
 
-    if ($bet['winner_id'] == $_SESSION['user']['id']) {
+    if ($bet['winner_id'] == $user_id) {
         return "Ставка выиграла";
     }
     if ($end_time_result <= 0) {
@@ -55,6 +56,10 @@ function get_bet_info($bet) {
     }
 
     return $end_time_result;
+}
+
+function get_user_id() {
+    return $_SESSION['user']['id'];
 }
 
 function get_current_price($initial_rate, $last_bet) {

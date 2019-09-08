@@ -17,7 +17,7 @@ LEFT JOIN category ON lot.category_id = category.id
 WHERE bet.user_id = ?
 ORDER BY bet.date_add DESC;
 ";
-$lots_stmt = db_get_prepare_stmt($link, $lots_sql, [$_SESSION['user']['id']]);
+$lots_stmt = db_get_prepare_stmt($link, $lots_sql, [get_user_id()]);
 $lots_res = mysqli_stmt_execute($lots_stmt);
 
 if (!$categories_res || !$lots_res) {
