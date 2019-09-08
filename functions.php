@@ -29,8 +29,8 @@ function get_time_left($end_time) {
     }
 
     $days = floor($timer / 86400);
-    $hours = floor($days % 86400 / 3600);
-    $minutes = floor($hours % 3600 / 60);
+    $hours = floor($timer % 86400 / 3600);
+    $minutes = floor($timer % 86400 % 3600 / 60);
 
     if ($days <= 0 && $hours <= 0) {
         return sprintf('%02d', $minutes);
@@ -40,13 +40,12 @@ function get_time_left($end_time) {
         return sprintf('%02d:%02d', $hours, $minutes);
     }
 
-
     return sprintf('%02d:%02d:%02d', $days, $hours, $minutes);
 }
 
 function get_bet_info($bet, $user_id) {
     $end_time = $bet['date_close'];
-    $end_time_result =  get_time_left($end_time);
+    $end_time_result = get_time_left($end_time);
 
     if ($bet['winner_id'] == $user_id) {
         return "Ставка выиграла";
@@ -257,8 +256,8 @@ function format_date_back($date_add) {
     }
 
     $days = floor($timer / 86400);
-    $hours = floor($days % 86400 / 3600);
-    $minutes = floor($hours % 3600 / 60);
+    $hours = floor($timer % 86400 / 3600);
+    $minutes = floor($timer % 86400 % 3600 / 60);
 
     if ($days === 1) {
         return 'Вчера, в ' . $date_add;
