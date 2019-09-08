@@ -280,7 +280,20 @@ function format_passed_time($time, $one, $two, $many) {
     return sprintf('%s %s назад', $time, get_noun_plural_form($time, $one, $two, $many));
 }
 
-function get_passed_time($date_add, $time_format = 'H:i', $month_format = 'H:i d/m', $year_format = 'H:i d/m/Y') { // преобразовываем время в нормальный вид
+function get_plural_noun_array($time_unit) {
+    switch ($time_unit) {
+        case 'секунда':
+            return ['секунда', 'секунды', 'секунд'];
+        case 'минута':
+            return ['минута', 'минуты', 'минут'];
+        case 'час':
+            return ['час', 'часа', 'часов'];
+        case 'день':
+            return ['день', 'дня', 'дней'];
+    }
+}
+
+function get_passed_time($date_add, $time_format = 'H:i', $month_format = 'H:i d.m', $year_format = 'H:i d.m.Y') { // преобразовываем время в нормальный вид
     $date = new \DateTime($date_add);
     $today = new \DateTime('now', $date->getTimezone());
     $yesterday = new \DateTime('-1 day', $date->getTimezone());
@@ -291,9 +304,9 @@ function get_passed_time($date_add, $time_format = 'H:i', $month_format = 'H:i d
     if ($minutes_ago == 0) {
         return 'Меньше минуты назад';
     } else if ($minutes_ago > 0 && $minutes_ago < 60) {
-        return format_passed_time($minutes_ago, 'минута', 'минуты', 'минут');
+        return format_passed_time($minutes_ago, ...get_plural_noun_array('минута'));
     } elseif ($hours_ago > 0 && $hours_ago < 24 && $today->format('ymd') == $date->format('ymd')) {
-        return format_passed_time($hours_ago, 'час', 'часа', 'часов');
+        return format_passed_time($hours_ago, ...get_plural_noun_array('час'));
     } elseif ($today->format('ymd') == $date->format('ymd')) {
         return sprintf('Сегодня в %s', $date->format($time_format));
     } elseif ($yesterday->format('ymd') == $date->format('ymd')) {
