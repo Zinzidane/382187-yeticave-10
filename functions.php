@@ -273,19 +273,21 @@ function get_passed_time($date_add, $time_format = 'H:i', $month_format = 'H:i d
     $minutes_ago = floor(($today->format('U') - $date->format('U')) / 60);
     $hours_ago = floor(($today->format('U') - $date->format('U')) / 3660);
 
-    if ($minutes_ago == 0) {
-        return 'Меньше минуты назад';
-    } else if ($minutes_ago > 0 && $minutes_ago < 60) {
-        return format_passed_time($minutes_ago, ...get_plural_noun_array('минута'));
-    } elseif ($hours_ago > 0 && $hours_ago < 24 && $today->format('ymd') == $date->format('ymd')) {
-        return format_passed_time($hours_ago, ...get_plural_noun_array('час'));
-    } elseif ($today->format('ymd') == $date->format('ymd')) {
-        return sprintf('Сегодня в %s', $date->format($time_format));
-    } elseif ($yesterday->format('ymd') == $date->format('ymd')) {
-        return sprintf('Вчера в %s', $date->format($time_format));
-    } elseif ($today->format('Y') == $date->format('Y')) {
-        return $date->format($month_format);
-    } else {
-        return $date->format($year_format);
+    if ($minutes_ago > 0) {
+        if ($minutes_ago < 60) {
+            return format_passed_time($minutes_ago, ...get_plural_noun_array('минута'));
+        } elseif ($hours_ago > 0 && $hours_ago < 24 && $today->format('ymd') == $date->format('ymd')) {
+            return format_passed_time($hours_ago, ...get_plural_noun_array('час'));
+        } elseif ($today->format('ymd') == $date->format('ymd')) {
+            return sprintf('Сегодня в %s', $date->format($time_format));
+        } elseif ($yesterday->format('ymd') == $date->format('ymd')) {
+            return sprintf('Вчера в %s', $date->format($time_format));
+        } elseif ($today->format('Y') == $date->format('Y')) {
+            return $date->format($month_format);
+        } else {
+            return $date->format($year_format);
+        }
     }
+
+    return 'Меньше минуты назад';
 }
