@@ -248,32 +248,6 @@ function validate_bet_form($bet, $lot) {
     return array_filter($errors);
 }
 
-function format_date_back($date_add) {
-    $timer = time() - strtotime($date_add);
-
-    if ($timer <=0 ) {
-        return 0;
-    }
-
-    $days = floor($timer / 86400);
-    $hours = floor($timer % 86400 / 3600);
-    $minutes = floor($timer % 86400 % 3600 / 60);
-
-    if ($days === 1) {
-        return 'Вчера, в ' . $date_add;
-    }
-
-    if ($days <= 0) {
-        return $hours . ' ' . get_noun_plural_form($hours, ...get_plural_noun_array('час')) . ' назад';
-    }
-
-    if ($days <= 0 && $hours <= 0) {
-        return $minutes . ' ' . get_noun_plural_form($minutes, ...get_plural_noun_array('минута')) . ' назад';
-    }
-
-    return $days . ' ' . get_noun_plural_form($days, 'день', 'дня', 'дней') . ' назад';
-}
-
 function format_passed_time($time, $one, $two, $many) {
     return sprintf('%s %s назад', $time, get_noun_plural_form($time, $one, $two, $many));
 }
