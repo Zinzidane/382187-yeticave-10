@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $page_content = include_template('add.php', ['lot' => $lot, 'errors' => $errors, 'categories' => $categories]);
     } else {
         $lot['image'] =  handle_image_upload($_FILES['lot_image']);
-        $lot['user_id'] = $_SESSION['user']['id'];
+        $lot['user_id'] = get_user_id();
 
         $add_lot_sql = 'INSERT INTO lot (title, category_id, description, initial_rate, rate_step, date_close, image, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
         $stmt = db_get_prepare_stmt($link, $add_lot_sql, $lot);

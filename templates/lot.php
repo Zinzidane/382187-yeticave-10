@@ -25,12 +25,14 @@
             Мин. ставка <span><?=add_currency_to_price($minimal_bet, 'rub', 'р'); ?></span>
             </div>
         </div>
-        <?php if ($is_auth): ?>
-        <form class="lot-item__form" action="https://echo.htmlacademy.ru" method="post" autocomplete="off">
-            <p class="lot-item__form-item form__item form__item--invalid">
-            <label for="cost">Ваша ставка</label>
-            <input id="cost" type="text" name="cost" placeholder="<?=$minimal_bet; ?>">
-            <span class="form__error">Введите наименование лота</span>
+        <?php if ($is_auth && $lot['user_id'] != get_user_id()): ?>
+        <?php $classname = (isset($errors)) ? "form--invalid" : ""; ?>
+        <form class="lot-item__form <?=$classname; ?>" action="lot.php?id=<?=$_GET['id'];?>" method="post" autocomplete="off">
+            <?php $classname = isset($errors['cost']) ? "form__item--invalid" : ""; ?>
+            <p class="lot-item__form-item form__item <?=$classname; ?>">
+                <label for="cost">Ваша ставка</label>
+                <input id="cost" type="text" name="cost" value="<?=get_post_val('cost'); ?>" placeholder="<?=$minimal_bet; ?>">
+                <span class="form__error"><?=$errors['cost']; ?></span>
             </p>
             <button type="submit" class="button">Сделать ставку</button>
         </form>
@@ -43,7 +45,7 @@
             <tr class="history__item">
             <td class="history__name"><?=$bet['user']; ?></td>
             <td class="history__price"><?=add_currency_to_price(format_price(htmlspecialchars($bet['rate'])), 'rub', 'р'); ?></td>
-            <td class="history__time"><?=$bet['date_add']; ?></td>
+            <td class="history__time"><?=get_passed_time($bet['date_add']); ?></td>
             </tr>
             <?php endforeach; ?>
         </table>

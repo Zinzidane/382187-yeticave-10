@@ -22,7 +22,6 @@ if (!$categories_result || !$lots_result) {
     print('Возникла проблема. Попробуйте еще раз.');
 }
 
-$is_auth = rand(0, 1);
 $categories = mysqli_fetch_all($categories_result, MYSQLI_ASSOC);
 $lots = mysqli_fetch_all($lots_result, MYSQLI_ASSOC);
 
