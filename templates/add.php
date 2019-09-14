@@ -60,11 +60,6 @@
     </div>
     <?php if (isset($errors)): ?>
         <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
-        <ul>
-            <?php foreach ($errors as $key => $val): ?>
-            <li><?=$key; ?><strong><?= $val; ?>:</strong></li>
-            <?php endforeach; ?>
-        </ul>
      <?php endif; ?>
     <button type="submit" class="button">Добавить лот</button>
 </form>

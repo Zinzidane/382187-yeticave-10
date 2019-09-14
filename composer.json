@@ -1,0 +1,12 @@
+{
+    "name": "user/382187-yeticave-10",
+    "require": {
+        "swiftmailer/swiftmailer": "^5.4"
+    },
+    "authors": [
+        {
+            "name": "Zinzidane",
+            "email": "ya-gans@mail.ru"
+        }
+    ]
+}
