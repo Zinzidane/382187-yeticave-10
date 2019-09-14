@@ -3,15 +3,13 @@ require_once ('init.php');
 
 $is_auth = is_auth();
 if (!isset($_GET['search'])) {
-    // http_response_code(404);
+    header("HTTP/1.0 404 Not Found");
     exit;
 }
 if ($link) {
-    $search = htmlspecialchars($_GET['search'], ENT_QUOTES);
+    $search = trim(htmlspecialchars($_GET['search'], ENT_QUOTES));
     $cur_page = intval($_GET['page'] ?? 1);
     $page_items = 9;
-    // $sql_category = get_categories();
-    // $categories = get_data($link, $sql_category);
     $sql = "
     SELECT lot.id, lot.title, lot.description
     FROM lot

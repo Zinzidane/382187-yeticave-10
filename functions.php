@@ -139,12 +139,24 @@ function validate_text($lot, $categories_ids) {
                 $errors[$key] = validate_rate($value, 0);
                 break;
             case 'date_close':
-                $errors[$key] = is_date_valid($key);
+                $errors[$key] = validate_lot_date_close($value);
                 break;
         }
     }
 
     return array_filter($errors);
+}
+
+function validate_lot_date_close($date) {
+    if (!is_date_valid($date)) {
+        return "Дата должна быть в формате ГГГГ-ММ-ДД";
+    }
+
+    if (strtotime($date) <= strtotime("tomorrow")) {
+        return 'Дата закрытия лота должна быть больше текущей даты, хотя бы на один день.';
+    }
+
+    return null;
 }
 
 function validate_required_fields($form, $required) {
