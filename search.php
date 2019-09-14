@@ -1,5 +1,5 @@
 <?php
-require_once ('init.php');
+require_once('init.php');
 
 $is_auth = is_auth();
 if (!isset($_GET['search'])) {
@@ -15,8 +15,6 @@ if ($link) {
     FROM lot
     WHERE lot.date_close > NOW() AND MATCH(lot.title, lot.description) AGAINST(?)
     ";
-
-    ;
     $stmt = db_get_prepare_stmt($link, $sql, [$search]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);

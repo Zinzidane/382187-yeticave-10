@@ -1,9 +1,12 @@
 <?php
-require_once 'init.php';
+require_once('init.php');
 
 if (!$link) {
-    exit();
+    $error = mysqli_connect_error();
+    print('Проблема с базой данных. Ожидайте пока исправим.');
+    exit;
 }
+
 $lots_sql = "
 SELECT lot.id, lot.title, MAX(bet.rate) as max_bet
 FROM lot

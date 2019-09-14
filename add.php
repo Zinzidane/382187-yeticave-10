@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } else {
     if (!is_auth()) {
         header("Location: /index.php");
-        exit();
+        exit;
     }
     $page_content = include_template('add.php', ['categories' => $categories]);
 }
