@@ -50,3 +50,5 @@ CREATE TABLE bet (
 CREATE INDEX title ON lot(title);
 CREATE INDEX description ON lot(description);
 CREATE UNIQUE INDEX email ON user(email);
+
+CREATE FULLTEXT INDEX lot_search ON lot(name, description);

@@ -25,7 +25,7 @@ if ($link) {
     $pages_count = ceil($items_count / $page_items);
     $offset = ($cur_page - 1) * $page_items;
     $pages = range(1, $pages_count);
-    $sql_pag =  "
+    $sql_page =  "
     SELECT lot.id, lot.title, lot.initial_rate, lot.date_close, lot.image, category.name as category, COUNT(bet.lot_id) as betCount, MAX(bet.rate) + lot.initial_rate as betsPrice
     FROM lot
     INNER JOIN category ON lot.category_id = category.id
@@ -34,7 +34,7 @@ if ($link) {
     GROUP BY lot.title, lot.initial_rate, lot.date_close, lot.image, category.name, lot.date_close, lot.id
     ORDER BY lot.date_close DESC LIMIT ? OFFSET ?;
     ";
-    $stmt = db_get_prepare_stmt($link, $sql_pag, [$search, $page_items, $offset]);
+    $stmt = db_get_prepare_stmt($link, $sql_page, [$search, $page_items, $offset]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     $lots = mysqli_fetch_all($res, MYSQLI_ASSOC);
