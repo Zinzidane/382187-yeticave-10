@@ -4,6 +4,7 @@ session_start();
 require_once('helpers.php');
 require_once('functions.php');
 require_once('config/db.php');
+require_once('config/mail.php');
 
 date_default_timezone_set('Europe/Moscow');
 

@@ -35,13 +35,13 @@ foreach ($lots as $lot) {
     if ($res) {
         $body = include_template('email.php', ['lot' => $lot, 'username' => $winner[0]['name']]);
 
-        $transport = (new Swift_SmtpTransport("phpdemo.ru", 25))
-            ->setUsername('keks@phpdemo.ru')
-            ->setPassword('htmlacademy')
+        $transport = (new Swift_SmtpTransport($mail['host'], $mail['port']))
+            ->setUsername($mail['username'])
+            ->setPassword($mail['password'])
         ;
         $mailer = new Swift_Mailer($transport);
         $message = (new Swift_Message('Ваша ставка победила'))
-            ->setFrom(['keks@phpdemo.ru'=> 'keks@phpdemo.ru'])
+            ->setFrom([$mail['username']=> $mail['name']])
             ->setTo([$winner[0]['email'] => $winner[0]['name']])
             ->setBody($body, 'text/html')
         ;
