@@ -17,8 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user_find_sql = 'SELECT id FROM user WHERE email = ? ';
         $user_find_stmt = db_get_prepare_stmt($link, $user_find_sql, [$signup_form['email']]);
         $user_find_res = mysqli_stmt_execute($user_find_stmt);
+        $user_find = mysqli_fetch_assoc(mysqli_stmt_get_result($user_find_stmt));
 
-        if (mysqli_num_rows(mysqli_fetch_assoc(mysqli_stmt_get_result($user_find_stmt)))) {
+        if ($user_find) {
             $errors['email'] = 'Пользователь с этим email уже зарегистрирован';
             $page_content = include_template('signup.php', ['signup_form' => $signup_form, 'errors' => $errors]);
         } else {

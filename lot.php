@@ -35,7 +35,7 @@ if (isset($_GET['id'])) {
         $errors = validate_bet_form($bet, $lot);
 
         if (count($errors)) {
-            $page_content = include_template('add.php', ['lot' => $lot, 'bets' => $bets, 'is_auth' => is_auth(), 'errors' => $errors]);
+            $page_content = include_template('lot.php', ['lot' => $lot, 'bets' => $bets, 'is_auth' => is_auth(), 'errors' => $errors]);
         } else {
             $rate_sql = 'INSERT INTO bet (rate, user_id, lot_id) VALUES (?, ?, ?)';
             $rate_stmt = db_get_prepare_stmt($link, $rate_sql, [$_POST['cost'], get_user_id(), $lot_id]);
