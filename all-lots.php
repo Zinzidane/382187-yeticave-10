@@ -54,7 +54,6 @@ $page_content = include_template('all-lots.php', [
     'lots' => $lots,
     'category' => $category,
     'categories' => $categories,
-    'search' => $search,
     'is_auth' => is_auth(),
     'pages_count' => $pages_count,
     'cur_page' => $cur_page,
