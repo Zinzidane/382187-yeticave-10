@@ -171,7 +171,7 @@ function validate_required_fields($form, $required) {
     return array_filter($errors);
 }
 
-function validate_image($lot) {
+function validate_lot_image() {
     $errors = [];
 
     if (isset($_FILES['lot_image']['name'])) {
@@ -194,7 +194,7 @@ function validate_lot_form($lot, $categories_ids) {
 
     $errors_text = validate_text($lot, $categories_ids);
     $errors_required_fields = validate_required_fields($lot, $required);
-    $errors_image = validate_image($lot);
+    $errors_image = validate_lot_image();
     $errors_form = array_merge($errors_text, $errors_required_fields, $errors_image);
 
     return $errors_form;
@@ -202,11 +202,9 @@ function validate_lot_form($lot, $categories_ids) {
 
 function handle_image_upload($file_field) {
     $tmp_name = $file_field['tmp_name'];
-    $path = $file_field['name'];
     $filename = uniqid() . '.jpeg';
     $filepath = 'uploads/' . $filename;
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
-    $file_type = finfo_file($finfo, $tmp_name);
     move_uploaded_file($tmp_name, __DIR__ . '/uploads/' . $filename);
 
     return $filepath;
@@ -281,7 +279,6 @@ function get_passed_time($date_add, $time_format = 'H:i', $month_format = 'H:i d
     $date = new \DateTime($date_add);
     $today = new \DateTime('now', $date->getTimezone());
     $yesterday = new \DateTime('-1 day', $date->getTimezone());
-    $tomorrow = new \DateTime('+1 day', $date->getTimezone());
     $minutes_ago = floor(($today->format('U') - $date->format('U')) / 60);
     $hours_ago = floor(($today->format('U') - $date->format('U')) / 3660);
 
