@@ -87,17 +87,35 @@ function get_id($element) {
 }
 
 function get_categories($link) {
-    $categories_sql = 'SELECT name, symbol_code FROM category';
+    $categories_sql = 'SELECT id, name, symbol_code FROM category';
     $categories_result = mysqli_query($link, $categories_sql);
 
-    if ($categories_result) {
-        $categories = mysqli_fetch_all($categories_result, MYSQLI_ASSOC);
-
-        return $categories;
+    if (!$categories_result) {
+        $error = mysqli_error($link);
+        header("HTTP/1.0 404 Not Found");
     }
 
-    $error = mysqli_error($link);
-    print('Возникла проблема. Попробуйте еще раз.');
+    $categories = mysqli_fetch_all($categories_result, MYSQLI_ASSOC);
+
+    return $categories;
+}
+
+function get_bets($link, $lot_id) {
+    $bets_sql = 'SELECT bet.rate as rate, bet.date_add as date_add, user.name as user FROM lot '
+    . 'JOIN bet ON lot.id = bet.lot_id '
+    . 'JOIN user on user.id = bet.user_id '
+    . 'WHERE lot.id = ' . $lot_id
+    . ' ORDER BY lot.date_add DESC';
+    $bets_result = mysqli_query($link, $bets_sql);
+
+    if (!$bets_result) {
+        $error = mysqli_error($link);
+        header("HTTP/1.0 404 Not Found");
+    }
+
+    $bets = mysqli_fetch_all($bets_result, MYSQLI_ASSOC);
+
+    return $bets;
 }
 
 function get_post_val($name) {

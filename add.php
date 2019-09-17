@@ -7,8 +7,6 @@ if (!$link) {
     exit;
 }
 
-// $sql = 'SELECT id, name, symbol_code FROM category';
-// $result = mysqli_query($link, $sql);
 $categories = get_categories($link);
 
 if ($categories) {

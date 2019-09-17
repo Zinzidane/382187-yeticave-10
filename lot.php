@@ -13,20 +13,15 @@ if (isset($_GET['id'])) {
     . 'JOIN category ON lot.category_id = category.id '
     . 'JOIN bet ON lot.id = bet.lot_id '
     . 'WHERE lot.id = ' . $lot_id;
-    $bets_sql = 'SELECT bet.rate as rate, bet.date_add as date_add, user.name as user FROM lot '
-    . 'JOIN bet ON lot.id = bet.lot_id '
-    . 'JOIN user on user.id = bet.user_id '
-    . 'WHERE lot.id = ' . $lot_id
-    . ' ORDER BY lot.date_add DESC';
     $lot_result = mysqli_query($link, $lot_sql);
-    $bets_result = mysqli_query($link, $bets_sql);
-    if (!$lot_result || !$bets_result) {
+
+    if (!$lot_result) {
         $error = mysqli_error($link);
         header("HTTP/1.0 404 Not Found");
     }
     $categories = get_categories($link);
     $lot = mysqli_fetch_all($lot_result, MYSQLI_ASSOC)[0];
-    $bets = mysqli_fetch_all($bets_result, MYSQLI_ASSOC);
+    $bets = get_bets($link, $lot_id);
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['cost']) {
         $bet = (int) $_POST['cost'];
@@ -40,18 +35,20 @@ if (isset($_GET['id'])) {
             $rate_res = mysqli_stmt_execute($rate_stmt);
 
             if ($rate_res) {
-                $page_content = include_template('lot.php', ['lot' => $lot, 'bets' => $bets, 'is_auth' => is_auth()]);
+                $updated_bets = get_bets($link, $lot_id);
+                $page_content = include_template('lot.php', ['lot' => $lot, 'bets' => $updated_bets, 'is_auth' => is_auth()]);
             } else {
                 print('Проблема с добавление лота в базу данных.');
                 exit;
             }
         }
+    } else {
+        $page_content = include_template('lot.php', ['lot' => $lot, 'bets' => $bets, 'is_auth' => is_auth(), 'errors' => $errors]);
     }
 } else {
     header("HTTP/1.0 404 Not Found");
 }
 
-$page_content = include_template('lot.php', ['lot' => $lot, 'bets' => $bets, 'is_auth' => is_auth(), 'errors' => $errors]);
 $layout_content = include_template('layout.php', [
     'title' => 'Просмотр лота',
     'username' => get_username(),
