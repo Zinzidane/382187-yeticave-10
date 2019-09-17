@@ -59,7 +59,9 @@ function get_bet_info($bet, $user_id) {
 }
 
 function get_user_id() {
-    return $_SESSION['user']['id'];
+    if (isset($_SESSION['user']['id'])) {
+        return $_SESSION['user']['id'];
+    }
 }
 
 function get_current_price($initial_rate, $last_bet) {
@@ -174,7 +176,7 @@ function validate_required_fields($form, $required) {
 function validate_lot_image() {
     $errors = [];
 
-    if (isset($_FILES['lot_image']['name'])) {
+    if (isset($_FILES['lot_image']) && $_FILES['lot_image']['tmp_name']) {
         $tmp_name = $_FILES['lot_image']['tmp_name'];
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $file_type = finfo_file($finfo, $tmp_name);
