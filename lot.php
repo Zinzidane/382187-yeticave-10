@@ -9,7 +9,6 @@ if (!$link) {
 
 if (isset($_GET['id'])) {
     $lot_id = mysqli_real_escape_string($link, $_GET['id']);
-    $categories_sql = 'SELECT name, symbol_code FROM category';
     $lot_sql = 'SELECT lot.title, lot.user_id, lot.initial_rate, lot.rate_step, lot.image, lot.date_close, MAX(bet.rate) AS current_rate, category.name AS category, COUNT(bet.lot_id) AS bets_number FROM lot '
     . 'JOIN category ON lot.category_id = category.id '
     . 'JOIN bet ON lot.id = bet.lot_id '
@@ -19,14 +18,13 @@ if (isset($_GET['id'])) {
     . 'JOIN user on user.id = bet.user_id '
     . 'WHERE lot.id = ' . $lot_id
     . ' ORDER BY lot.date_add DESC';
-    $categories_result = mysqli_query($link, $categories_sql);
     $lot_result = mysqli_query($link, $lot_sql);
     $bets_result = mysqli_query($link, $bets_sql);
-    if (!$categories_result || !$lot_result || !$bets_result) {
+    if (!$lot_result || !$bets_result) {
         $error = mysqli_error($link);
         header("HTTP/1.0 404 Not Found");
     }
-    $categories = mysqli_fetch_all($categories_result, MYSQLI_ASSOC);
+    $categories = get_categories($link);
     $lot = mysqli_fetch_all($lot_result, MYSQLI_ASSOC)[0];
     $bets = mysqli_fetch_all($bets_result, MYSQLI_ASSOC);
 

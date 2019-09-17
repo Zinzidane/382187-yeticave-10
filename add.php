@@ -7,11 +7,11 @@ if (!$link) {
     exit;
 }
 
-$sql = 'SELECT id, name, symbol_code FROM category';
-$result = mysqli_query($link, $sql);
+// $sql = 'SELECT id, name, symbol_code FROM category';
+// $result = mysqli_query($link, $sql);
+$categories = get_categories($link);
 
-if ($result) {
-    $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
+if ($categories) {
     $categories_ids = array_map('get_id', $categories);
 } else {
     $error = mysqli_error($link);

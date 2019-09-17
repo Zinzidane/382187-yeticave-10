@@ -7,8 +7,6 @@ if (!$link) {
     exit;
 }
 
-$categories_sql = 'SELECT name, symbol_code FROM category';
-$categories_res = mysqli_query($link, $categories_sql);
 $lots_sql = "
 SELECT bet.user_id, bet.id, lot.title, lot.date_close, lot.image, lot.description, category.name as category, bet.rate, bet.lot_id, lot.winner_id, bet.date_add, lot.date_close
 FROM bet
@@ -20,12 +18,12 @@ ORDER BY bet.date_add DESC;
 $lots_stmt = db_get_prepare_stmt($link, $lots_sql, [get_user_id()]);
 $lots_res = mysqli_stmt_execute($lots_stmt);
 
-if (!$categories_res || !$lots_res) {
+if (!$lots_res) {
     $error = mysqli_error($link);
     print('Возникла проблема. Попробуйте еще раз.');
 }
 
-$categories = mysqli_fetch_all($categories_res, MYSQLI_ASSOC);
+$categories = get_categories($link);
 $lots = mysqli_fetch_all(mysqli_stmt_get_result($lots_stmt), MYSQLI_ASSOC);
 
 $page_content = include_template('my-bets.php', ['categories' => $categories, 'bets' => $lots]);

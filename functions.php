@@ -86,6 +86,20 @@ function get_id($element) {
     }
 }
 
+function get_categories($link) {
+    $categories_sql = 'SELECT name, symbol_code FROM category';
+    $categories_result = mysqli_query($link, $categories_sql);
+
+    if ($categories_result) {
+        $categories = mysqli_fetch_all($categories_result, MYSQLI_ASSOC);
+
+        return $categories;
+    }
+
+    $error = mysqli_error($link);
+    print('Возникла проблема. Попробуйте еще раз.');
+}
+
 function get_post_val($name) {
     return $_POST[$name] ?? "";
 }

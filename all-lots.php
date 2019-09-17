@@ -10,9 +10,11 @@ if ($link) {
     $category = htmlspecialchars($_GET['category'], ENT_QUOTES);
     $cur_page = intval($_GET['page'] ?? 1);
     $page_items = 9;
-    $categories_sql = 'SELECT name, symbol_code FROM category';
-    $categories_result = mysqli_query($link, $categories_sql);
-    $categories = mysqli_fetch_all($categories_result, MYSQLI_ASSOC);
+
+    $categories = get_categories($link);
+    // $categories_sql = 'SELECT name, symbol_code FROM category';
+    // $categories_result = mysqli_query($link, $categories_sql);
+    // $categories = mysqli_fetch_all($categories_result, MYSQLI_ASSOC);
 
     $sql = "
     SELECT lot.id, lot.title, category.name as category
