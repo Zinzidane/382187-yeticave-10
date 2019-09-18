@@ -9,7 +9,7 @@ if (!$link) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $signin_form = $_POST;
-    $errors = validate_signin_form($signin_form);
+    $errors = validateSigninForm($signin_form);
 
     if (count($errors)) {
         $page_content = include_template('signin.php', ['signin_form' => $signin_form, 'errors' => $errors]);
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } else {
     $page_content = include_template('signin.php', []);
 
-    if (is_auth()) {
+    if (isAuth()) {
         header("Location: /index.php");
         exit;
     }
@@ -47,8 +47,8 @@ $page_content = include_template('signin.php', ['signin_form' => $signin_form, '
 
 $layout_content = include_template('layout.php', [
     'title' => 'Yeticave | Вход',
-    'username' => get_username(),
-    'is_auth' => is_auth(),
+    'username' => getUsername(),
+    'is_auth' => isAuth(),
     'content'=> $page_content,
     'categories' => []
 ]);

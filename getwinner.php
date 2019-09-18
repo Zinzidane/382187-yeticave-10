@@ -33,7 +33,7 @@ foreach ($lots as $lot) {
     SET winner_id = ?
     WHERE id = ?;
     ";
-    $stmt = db_get_prepare_stmt($link, $sql, [$winner[0]['user_id'] , $lot['id']]);
+    $stmt = db_get_prepare_stmt($link, $sql, [$winner[0]['user_id'], $lot['id']]);
     $res = mysqli_stmt_execute($stmt);
     if ($res) {
         $body = include_template('email.php', ['lot' => $lot, 'username' => $winner[0]['name']]);

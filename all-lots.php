@@ -1,7 +1,7 @@
 <?php
 require_once('init.php');
 
-$is_auth = is_auth();
+$is_auth = isAuth();
 if (!isset($_GET['category'])) {
     header("HTTP/1.0 404 Not Found");
     exit;
@@ -11,7 +11,7 @@ if ($link) {
     $cur_page = intval($_GET['page'] ?? 1);
     $page_items = 9;
 
-    $categories = get_categories($link);
+    $categories = getCategories($link);
     // $categories_sql = 'SELECT name, symbol_code FROM category';
     // $categories_result = mysqli_query($link, $categories_sql);
     // $categories = mysqli_fetch_all($categories_result, MYSQLI_ASSOC);
@@ -56,15 +56,15 @@ $page_content = include_template('all-lots.php', [
     'lots' => $lots,
     'category' => $category,
     'categories' => $categories,
-    'is_auth' => is_auth(),
+    'is_auth' => isAuth(),
     'pages_count' => $pages_count,
     'cur_page' => $cur_page,
     'pages' => $pages
 ]);
 $layout_content = include_template('layout.php', [
     'title' => 'Лоты по категориям',
-    'username' => get_username(),
-    'is_auth' => is_auth(),
+    'username' => getUsername(),
+    'is_auth' => isAuth(),
     'content' => $page_content,
     'categories' => $categories
 ]);

@@ -24,14 +24,14 @@ if (!$lots_result) {
     print('Возникла проблема. Попробуйте еще раз.');
 }
 
-$categories = get_categories($link);
+$categories = getCategories($link);
 $lots = mysqli_fetch_all($lots_result, MYSQLI_ASSOC);
 
 $page_content = include_template('main.php', ['categories' => $categories, 'lots' => $lots]);
 $layout_content = include_template('layout.php', [
     'title' => 'Главная',
-    'username' => get_username(),
-    'is_auth' => is_auth(),
+    'username' => getUsername(),
+    'is_auth' => isAuth(),
     'content' => $page_content,
     'categories' => $categories
 ]);

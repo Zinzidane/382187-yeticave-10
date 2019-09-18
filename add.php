@@ -7,10 +7,10 @@ if (!$link) {
     exit;
 }
 
-$categories = get_categories($link);
+$categories = getCategories($link);
 
 if ($categories) {
-    $categories_ids = array_map('get_id', $categories);
+    $categories_ids = array_map('getId', $categories);
 } else {
     $error = mysqli_error($link);
     header("HTTP/1.0 404 Not Found");
@@ -20,16 +20,16 @@ $page_content = include_template('add.php', ['categories' => $categories]);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lot = $_POST;
-    $errors = validate_lot_form($lot, $categories_ids);
+    $errors = validateLotForm($lot, $categories_ids);
 
     if (count($errors)) {
         $page_content = include_template('add.php', ['lot' => $lot, 'errors' => $errors, 'categories' => $categories]);
     } else {
         if(!isset($lot['image'])) {
-            $lot['image'] =  handle_image_upload($_FILES['lot_image']);
+            $lot['image'] =  handleImageUpload($_FILES['lot_image']);
         }
 
-        $lot['user_id'] = get_user_id();
+        $lot['user_id'] = getUserId();
 
         $add_lot_sql = 'INSERT INTO lot (title, category_id, description, initial_rate, rate_step, date_close, image, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
         $stmt = db_get_prepare_stmt($link, $add_lot_sql, $lot);
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 } else {
-    if (!is_auth()) {
+    if (!isAuth()) {
         header("Location: /index.php");
         exit;
     }
@@ -52,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $layout_content = include_template('layout.php', [
     'title' => 'Добавить лот',
-    'username' => get_username(),
-    'is_auth' => is_auth(),
+    'username' => getUsername(),
+    'is_auth' => isAuth(),
     'content' => $page_content,
     'categories' => $categories
 ]);

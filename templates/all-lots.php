@@ -27,11 +27,11 @@
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Стартовая цена</span>
-                            <span class="lot__cost"><?=add_currency_to_price(format_price(get_current_price($lot['initial_rate'], $lot['current_rate'])), 'rub', 'р'); ?></span>
+                            <span class="lot__cost"><?=addCurrencyToPrice(formatPrice(getCurrentPrice($lot['initial_rate'], $lot['current_rate'])), 'rub', 'р'); ?></span>
                         </div>
-                        <?php $finishing_classname = get_dt_range($lot['date_close'])[0] < 24  ? "timer--finishing" : ""; ?>
+                        <?php $finishing_classname = getDtRange($lot['date_close'])[0] < 24  ? "timer--finishing" : ""; ?>
                         <div class="lot__timer timer <?=$finishing_classname; ?>">
-                            <?=implode(':', get_dt_range($lot['date_close']));?>
+                            <?=implode(':', getDtRange($lot['date_close']));?>
                         </div>
                     </div>
                 </div>

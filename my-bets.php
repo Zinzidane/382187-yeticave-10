@@ -15,7 +15,7 @@ LEFT JOIN category ON lot.category_id = category.id
 WHERE bet.user_id = ?
 ORDER BY bet.date_add DESC;
 ";
-$lots_stmt = db_get_prepare_stmt($link, $lots_sql, [get_user_id()]);
+$lots_stmt = db_get_prepare_stmt($link, $lots_sql, [getUserId()]);
 $lots_res = mysqli_stmt_execute($lots_stmt);
 
 if (!$lots_res) {
@@ -23,14 +23,14 @@ if (!$lots_res) {
     print('Возникла проблема. Попробуйте еще раз.');
 }
 
-$categories = get_categories($link);
+$categories = getCategories($link);
 $lots = mysqli_fetch_all(mysqli_stmt_get_result($lots_stmt), MYSQLI_ASSOC);
 
 $page_content = include_template('my-bets.php', ['categories' => $categories, 'bets' => $lots]);
 $layout_content = include_template('layout.php', [
     'title' => 'Мои ставки',
-    'username' => get_username(),
-    'is_auth' => is_auth(),
+    'username' => getUsername(),
+    'is_auth' => isAuth(),
     'content' => $page_content,
     'categories' => $categories
 ]);

@@ -1,7 +1,7 @@
 <?php
 require_once('init.php');
 
-$is_auth = is_auth();
+$is_auth = isAuth();
 if (!isset($_GET['search'])) {
     header("HTTP/1.0 404 Not Found");
     exit;
@@ -48,7 +48,7 @@ foreach ($lots as $i => $array) {
 $page_content = include_template('search.php', [
     'lots' => $lots,
     'search' => $search,
-    'is_auth' => is_auth(),
+    'is_auth' => isAuth(),
     'pages_count' => $pages_count,
     'cur_page' => $cur_page,
     'pages' => $pages
@@ -56,8 +56,8 @@ $page_content = include_template('search.php', [
 
 $layout_content = include_template('layout.php', [
     'title' => 'Результаты поиска',
-    'username' => get_username(),
-    'is_auth' => is_auth(),
+    'username' => getUsername(),
+    'is_auth' => isAuth(),
     'content' => $page_content,
     'categories' => []
 ]);

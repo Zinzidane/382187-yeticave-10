@@ -7,7 +7,7 @@
  *
  * @return string Отформатированная цена
  */
-function format_price($price) {
+function formatPrice($price) {
     $ceiled_price = ceil($price);
     $formatted_price = number_format($ceiled_price, 0, '.', ' ');
 
@@ -23,7 +23,7 @@ function format_price($price) {
  *
  * @return string Возвращает html c валютой и ценой
  */
-function add_currency_to_price($price, $className, $currency) {
+function addCurrencyToPrice($price, $className, $currency) {
     return "{$price}<b class={$className}>{$currency}</b>";
 }
 
@@ -34,7 +34,7 @@ function add_currency_to_price($price, $className, $currency) {
  *
  * @return array Возвращает время до окончания даты в формате массива, где первый элемент - часы, а второй - минуты
  */
-function get_dt_range($date) {
+function getDtRange($date) {
     // В одном дне 86400 секунд
     $end_date = strtotime($date);
     $secs_to_end = $end_date - time();
@@ -52,10 +52,10 @@ function get_dt_range($date) {
  *
  * @return string Возвращает отформатированное время c прошедшей даты
  */
-function get_time_left($end_time) {
+function getTimeLeft($end_time) {
     $timer = strtotime($end_time) - strtotime('now');
 
-    if ($timer <=0 ) {
+    if ($timer <=0) {
         return 0;
     }
 
@@ -82,9 +82,9 @@ function get_time_left($end_time) {
  *
  * @return string Возвращает информацию о ставке
  */
-function get_bet_info($bet, $user_id) {
+function getBetInfo($bet, $user_id) {
     $end_time = $bet['date_close'];
-    $end_time_result = get_time_left($end_time);
+    $end_time_result = getTimeLeft($end_time);
 
     if ($bet['winner_id'] == $user_id) {
         return "Ставка выиграла";
@@ -102,7 +102,7 @@ function get_bet_info($bet, $user_id) {
  *
  * @return string Возвращает ID текущего польователя в виде строки
  */
-function get_user_id() {
+function getUserId() {
     if (isset($_SESSION['user']['id'])) {
         return $_SESSION['user']['id'];
     }
@@ -116,7 +116,7 @@ function get_user_id() {
  *
  * @return int Возвращает текущую цену в виде числа
  */
-function get_current_price($initial_rate, $last_bet) {
+function getCurrentPrice($initial_rate, $last_bet) {
     if ($last_bet) {
         return $last_bet;
     }
@@ -133,7 +133,7 @@ function get_current_price($initial_rate, $last_bet) {
  *
  * @return int Возвращает минимально возможную ставку в виде числа
  */
-function get_minimal_bet($initial_rate, $rate_step, $last_bet) {
+function getMinimalBet($initial_rate, $rate_step, $last_bet) {
     if (!$last_bet) {
         return $initial_rate;
     }
@@ -148,7 +148,7 @@ function get_minimal_bet($initial_rate, $rate_step, $last_bet) {
  * 
  * @return int Возвращает ID элемента, если он существует
  */
-function get_id($element) {
+function getId($element) {
     if ($element['id']) {
         return $element['id'];
     }
@@ -161,7 +161,7 @@ function get_id($element) {
  * 
  * @return array Возвращает массив категорий, если они существует
  */
-function get_categories($link) {
+function getCategories($link) {
     $categories_sql = 'SELECT id, name, symbol_code FROM category';
     $categories_result = mysqli_query($link, $categories_sql);
 
@@ -183,7 +183,7 @@ function get_categories($link) {
  * 
  * @return array Возвращает массив ставок, если они существуют
  */
-function get_bets($link, $lot_id) {
+function getBets($link, $lot_id) {
     $bets_sql = 'SELECT bet.rate as rate, bet.date_add as date_add, user.name as user FROM lot '
     . 'JOIN bet ON lot.id = bet.lot_id '
     . 'JOIN user on user.id = bet.user_id '
@@ -208,7 +208,7 @@ function get_bets($link, $lot_id) {
  * 
  * @return Возвращает значение поля формы, если оно существует
  */
-function get_post_val($name) {
+function getPostVal($name) {
     return $_POST[$name] ?? "";
 }
 
@@ -220,7 +220,7 @@ function get_post_val($name) {
  * 
  * @return Возвращает ID категории, если оно валидно, если нет, то возращает null
  */
-function validate_category($id, $allowed_list) {
+function validateCategory($id, $allowed_list) {
     if (!in_array($id, $allowed_list)) {
         return $id;
     }
@@ -236,7 +236,7 @@ function validate_category($id, $allowed_list) {
  * 
  * @return Возвращает текст ошибки валидации, если ставка невалидна, если нет, то возращает null
  */
-function validate_rate($rate, $min) {
+function validateRate($rate, $min) {
     if ($rate < $min) {
         return "Значение должно быть больше $min";
     }
@@ -257,7 +257,7 @@ function validate_rate($rate, $min) {
  * 
  * @return Возвращает текст ошибки валидации, если длина значения невалидна, если нет, то возращает null
  */
-function validate_length($field, $min, $max) {
+function validateLength($field, $min, $max) {
     $len = strlen($field);
 
     if ($len < $min or $len > $max) {
@@ -275,28 +275,28 @@ function validate_length($field, $min, $max) {
  * 
  * @return array Возвращает массив ошибок валидации лота
  */
-function validate_text($lot, $categories_ids) {
+function validateText($lot, $categories_ids) {
     $errors = [];
 
     foreach ($lot as $key => $value) {
         switch ($key) {
             case 'category_id':
-                $errors[$key] = validate_category($value, $categories_ids);
+                $errors[$key] = validateCategory($value, $categories_ids);
                 break;
             case 'title':
-                $errors[$key] = validate_length($value, 1, 255);
+                $errors[$key] = validateLength($value, 1, 255);
                 break;
             case 'description':
-                $errors[$key] = validate_length($value, 0, 255);
+                $errors[$key] = validateLength($value, 0, 255);
                 break;
             case 'initial_rate':
-                $errors[$key] = validate_rate($value, 0);
+                $errors[$key] = validateRate($value, 0);
                 break;
             case 'rate_step':
-                $errors[$key] = validate_rate($value, 0);
+                $errors[$key] = validateRate($value, 0);
                 break;
             case 'date_close':
-                $errors[$key] = validate_lot_date_close($value);
+                $errors[$key] = validateLotDateClose($value);
                 break;
         }
     }
@@ -311,7 +311,7 @@ function validate_text($lot, $categories_ids) {
  * 
  * @return Возвращает текст ошибки, если дата завершения лота невалидна, в противном случае возвращает null
  */
-function validate_lot_date_close($date) {
+function validateLotDateClose($date) {
     if (!is_date_valid($date)) {
         return "Дата должна быть в формате ГГГГ-ММ-ДД";
     }
@@ -331,7 +331,7 @@ function validate_lot_date_close($date) {
  * 
  * @return array Возвращает массив ошибок валидации обязательных полей
  */
-function validate_required_fields($form, $required) {
+function validateRequiredFields($form, $required) {
     $errors = [];
 
     foreach ($required as $key) {
@@ -348,7 +348,7 @@ function validate_required_fields($form, $required) {
  * 
  * @return array Возвращает массив ошибок валидации изображения лота
  */
-function validate_lot_image() {
+function validateLotImage() {
     $errors = [];
 
     if (isset($_FILES['lot_image']) && $_FILES['lot_image']['tmp_name']) {
@@ -374,12 +374,12 @@ function validate_lot_image() {
  * 
  * @return array Возвращает массив ошибок валидации добавляемого лота
  */
-function validate_lot_form($lot, $categories_ids) {
+function validateLotForm($lot, $categories_ids) {
     $required = ['title', 'category_id', 'description', 'initial_rate', 'rate_step', 'date_close'];
 
-    $errors_text = validate_text($lot, $categories_ids);
-    $errors_required_fields = validate_required_fields($lot, $required);
-    $errors_image = validate_lot_image();
+    $errors_text = validateText($lot, $categories_ids);
+    $errors_required_fields = validateRequiredFields($lot, $required);
+    $errors_image = validateLotImage();
     $errors_form = array_merge($errors_text, $errors_required_fields, $errors_image);
 
     return $errors_form;
@@ -392,7 +392,7 @@ function validate_lot_form($lot, $categories_ids) {
  * 
  * @return string Возвращает адрес загруженной картинки в виде строки
  */
-function handle_image_upload($file_field) {
+function handleImageUpload($file_field) {
     $tmp_name = $file_field['tmp_name'];
     $filename = uniqid() . '.jpeg';
     $filepath = 'uploads/' . $filename;
@@ -409,10 +409,10 @@ function handle_image_upload($file_field) {
  * 
  * @return array Возвращает массив ошибок валидации email
  */
-function validate_email($email) {
+function validateEmail($email) {
     $errors = [];
 
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    if (!filter_var($email, FILTER_validateEmail)) {
         $errors['email'] = 'Введите валидный электронный адрес';
     }
 
@@ -426,11 +426,11 @@ function validate_email($email) {
  * 
  * @return array Возвращает массив ошибок валидации формы регистрации
  */
-function validate_signup_form($signup_form) {
+function validateSignupForm($signup_form) {
     $required = ['email', 'password', 'name', 'message'];
 
-    $errors_email = validate_email($signup_form['email']);
-    $errors_required_fields = validate_required_fields($signup_form, $required);
+    $errors_email = validateEmail($signup_form['email']);
+    $errors_required_fields = validateRequiredFields($signup_form, $required);
 
     return array_merge($errors_email, $errors_required_fields);
 }
@@ -442,10 +442,10 @@ function validate_signup_form($signup_form) {
  * 
  * @return array Возвращает массив ошибок валидации формы логина
  */
-function validate_signin_form($signin_form) {
+function validateSigninForm($signin_form) {
     $required = ['email', 'password'];
 
-    return validate_required_fields($signin_form, $required);
+    return validateRequiredFields($signin_form, $required);
 }
 
 /**
@@ -454,7 +454,7 @@ function validate_signin_form($signin_form) {
  * 
  * @return Возвращает имя пользователя в виде строки, если сеcсия активна, если нет, то null
  */
-function get_username() {
+function getUsername() {
     return isset($_SESSION['user']) ? $_SESSION['user']['name'] : null;
 }
 
@@ -463,7 +463,7 @@ function get_username() {
  * 
  * @return boolean Возвращает true, если пользователь авторизован, если нет, то false
  */
-function is_auth() {
+function isAuth() {
     return isset($_SESSION['user']);
 }
 
@@ -475,7 +475,7 @@ function is_auth() {
  * 
  * @return array Возвращает массив ошибок валидации добавляемого ставки
  */
-function validate_bet_form($bet, $lot) {
+function validateBetForm($bet, $lot) {
     $errors = [];
     $min_cost = $lot['current_rate'] + $lot['rate_step'];
 
@@ -500,7 +500,7 @@ function validate_bet_form($bet, $lot) {
  * 
  * @return string Возвращает отформатированное прошедшее время с момента даты в виде строки
  */
-function format_passed_time($time, $one, $two, $many) {
+function formatPassedTime($time, $one, $two, $many) {
     return sprintf('%s %s назад', $time, get_noun_plural_form($time, $one, $two, $many));
 }
 
@@ -512,7 +512,7 @@ function format_passed_time($time, $one, $two, $many) {
  * 
  * @return string Возвращает массив единиц времени
  */
-function get_plural_noun_array($time_unit) {
+function getPluralNounArray($time_unit) {
     switch ($time_unit) {
         case 'секунда':
             return ['секунда', 'секунды', 'секунд'];
@@ -535,7 +535,7 @@ function get_plural_noun_array($time_unit) {
  * 
  * @return string Возвращает отформатированное прошедшее время с момента даты в виде строки в зависимости от того, когда это дата наступила
  */
-function get_passed_time($date_add, $time_format = 'H:i', $month_format = 'H:i d.m', $year_format = 'H:i d.m.Y') { // преобразовываем время в нормальный вид
+function getPassedTime($date_add, $time_format = 'H:i', $month_format = 'H:i d.m', $year_format = 'H:i d.m.Y') { // преобразовываем время в нормальный вид
     $date = new \DateTime($date_add);
     $today = new \DateTime('now', $date->getTimezone());
     $yesterday = new \DateTime('-1 day', $date->getTimezone());
@@ -544,9 +544,9 @@ function get_passed_time($date_add, $time_format = 'H:i', $month_format = 'H:i d
 
     if ($minutes_ago > 0) {
         if ($minutes_ago < 60) {
-            return format_passed_time($minutes_ago, ...get_plural_noun_array('минута'));
+            return formatPassedTime($minutes_ago, ...getPluralNounArray('минута'));
         } elseif ($hours_ago > 0 && $hours_ago < 24 && $today->format('ymd') == $date->format('ymd')) {
-            return format_passed_time($hours_ago, ...get_plural_noun_array('час'));
+            return formatPassedTime($hours_ago, ...getPluralNounArray('час'));
         } elseif ($today->format('ymd') == $date->format('ymd')) {
             return sprintf('Сегодня в %s', $date->format($time_format));
         } elseif ($yesterday->format('ymd') == $date->format('ymd')) {
