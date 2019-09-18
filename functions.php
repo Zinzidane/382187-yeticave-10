@@ -78,7 +78,7 @@ function getTimeLeft($end_time) {
  * Получает информацию о ставке
  *
  * @param $bet Ставка
- * @param int $user_id ID текущего пользователя 
+ * @param int $user_id ID текущего пользователя
  *
  * @return string Возвращает информацию о ставке
  */
@@ -143,9 +143,9 @@ function getMinimalBet($initial_rate, $rate_step, $last_bet) {
 
 /**
  * Получает ID элемента
- * 
+ *
  * @param $element Элемент
- * 
+ *
  * @return int Возвращает ID элемента, если он существует
  */
 function getId($element) {
@@ -156,9 +156,9 @@ function getId($element) {
 
 /**
  * Получает список категорий
- * 
+ *
  * @param $link mysqli Ресурс соединения
- * 
+ *
  * @return array Возвращает массив категорий, если они существует
  */
 function getCategories($link) {
@@ -177,10 +177,10 @@ function getCategories($link) {
 
 /**
  * Получает список ставок
- * 
+ *
  * @param $link mysqli Ресурс соединения
  * @param string $lot_id ID лота
- * 
+ *
  * @return array Возвращает массив ставок, если они существуют
  */
 function getBets($link, $lot_id) {
@@ -203,9 +203,9 @@ function getBets($link, $lot_id) {
 
 /**
  * Получает значение из формы
- * 
+ *
  * @param string $name Название поля формы в виде строки
- * 
+ *
  * @return Возвращает значение поля формы, если оно существует
  */
 function getPostVal($name) {
@@ -214,10 +214,10 @@ function getPostVal($name) {
 
 /**
  * Валидирует категорию
- * 
+ *
  * @param int $id ID категории в виде числа
  * @param array $allowed_list Массив разрешенных категорий
- * 
+ *
  * @return Возвращает ID категории, если оно валидно, если нет, то возращает null
  */
 function validateCategory($id, $allowed_list) {
@@ -230,10 +230,10 @@ function validateCategory($id, $allowed_list) {
 
 /**
  * Валидирует ставку
- * 
+ *
  * @param int $rate Ставка в виде числа
  * @param int $min Минимальное значение ставки
- * 
+ *
  * @return Возвращает текст ошибки валидации, если ставка невалидна, если нет, то возращает null
  */
 function validateRate($rate, $min) {
@@ -250,11 +250,11 @@ function validateRate($rate, $min) {
 
 /**
  * Валидирует длину строки
- * 
+ *
  * @param string $field Значение в виде строки
  * @param int $min Минимальная  длина значения
  * @param int $max Максимальная длина значения
- * 
+ *
  * @return Возвращает текст ошибки валидации, если длина значения невалидна, если нет, то возращает null
  */
 function validateLength($field, $min, $max) {
@@ -269,10 +269,10 @@ function validateLength($field, $min, $max) {
 
 /**
  * Валидирует лот
- * 
+ *
  * @param array $lot Лот
  * @param array $categories_ids Массив ID категорий
- * 
+ *
  * @return array Возвращает массив ошибок валидации лота
  */
 function validateText($lot, $categories_ids) {
@@ -306,9 +306,9 @@ function validateText($lot, $categories_ids) {
 
 /**
  * Валидирует дату завершения лота
- * 
+ *
  * @param string $date Дата завершения лота в виде строки
- * 
+ *
  * @return Возвращает текст ошибки, если дата завершения лота невалидна, в противном случае возвращает null
  */
 function validateLotDateClose($date) {
@@ -325,10 +325,10 @@ function validateLotDateClose($date) {
 
 /**
  * Валидирует, что поля формы не пустые
- * 
+ *
  * @param array $form Валидируемая форма
  * @param array $required Массив ключей обязательных полей
- * 
+ *
  * @return array Возвращает массив ошибок валидации обязательных полей
  */
 function validateRequiredFields($form, $required) {
@@ -345,7 +345,7 @@ function validateRequiredFields($form, $required) {
 
 /**
  * Валидирует изображение лота
- * 
+ *
  * @return array Возвращает массив ошибок валидации изображения лота
  */
 function validateLotImage() {
@@ -368,10 +368,10 @@ function validateLotImage() {
 
 /**
  * Валидирует форму добавления лота
- * 
+ *
  * @param array $lot Лот
  * @param array $categories_ids Массив ID категорий
- * 
+ *
  * @return array Возвращает массив ошибок валидации добавляемого лота
  */
 function validateLotForm($lot, $categories_ids) {
@@ -387,9 +387,9 @@ function validateLotForm($lot, $categories_ids) {
 
 /**
  * Обрабатывает загрузку картики
- * 
+ *
  * @param $file_field Поле с картинкой
- * 
+ *
  * @return string Возвращает адрес загруженной картинки в виде строки
  */
 function handleImageUpload($file_field) {
@@ -404,9 +404,9 @@ function handleImageUpload($file_field) {
 
 /**
  * Валидирует email
- * 
+ *
  * @param string $email Email в виде строки
- * 
+ *
  * @return array Возвращает массив ошибок валидации email
  */
 function validateEmail($email) {
@@ -421,9 +421,9 @@ function validateEmail($email) {
 
 /**
  * Валидирует форму регистрации
- * 
+ *
  * @param array $signup_form Форма регистрации в виде объекта
- * 
+ *
  * @return array Возвращает массив ошибок валидации формы регистрации
  */
 function validateSignupForm($signup_form) {
@@ -437,9 +437,9 @@ function validateSignupForm($signup_form) {
 
 /**
  * Валидирует форму логина
- * 
+ *
  * @param array $signin_form Форма логина в виде объекта
- * 
+ *
  * @return array Возвращает массив ошибок валидации формы логина
  */
 function validateSigninForm($signin_form) {
@@ -450,8 +450,8 @@ function validateSigninForm($signin_form) {
 
 /**
  * Возвращает имя текущего пользователя
- * 
- * 
+ *
+ *
  * @return Возвращает имя пользователя в виде строки, если сеcсия активна, если нет, то null
  */
 function getUsername() {
@@ -460,7 +460,7 @@ function getUsername() {
 
 /**
  * Проверяет авторизован пользователь или нет
- * 
+ *
  * @return boolean Возвращает true, если пользователь авторизован, если нет, то false
  */
 function isAuth() {
@@ -469,10 +469,10 @@ function isAuth() {
 
 /**
  * Валидирует форму добавления ставки
- * 
+ *
  * @param array $bet Ставка
  * @param array $lot Лот
- * 
+ *
  * @return array Возвращает массив ошибок валидации добавляемого ставки
  */
 function validateBetForm($bet, $lot) {
@@ -492,12 +492,12 @@ function validateBetForm($bet, $lot) {
 
 /**
  * Форматирует время, которое прошло в зависимости от числа единиц прошедшего времени
- * 
+ *
  * @param string $time Время в виде строки
  * @param string $one Форма единственного числа
  * @param string $two Форма если единиц две
  * @param string $many Форма если единиц больше двух
- * 
+ *
  * @return string Возвращает отформатированное прошедшее время с момента даты в виде строки
  */
 function formatPassedTime($time, $one, $two, $many) {
@@ -507,9 +507,9 @@ function formatPassedTime($time, $one, $two, $many) {
 
 /**
  * Получает массив единиц времени для разного количества единиц
- * 
+ *
  * @param string $time_unit Единица времени
- * 
+ *
  * @return string Возвращает массив единиц времени
  */
 function getPluralNounArray($time_unit) {
@@ -528,11 +528,11 @@ function getPluralNounArray($time_unit) {
 
 /**
  * Получает время прошедшее с момента даты
- * 
+ *
  * @param string $data_add Дата в виде строки
  * @param string $month_format Месячный формат времени
  * @param string $year_format Годичный формат времени
- * 
+ *
  * @return string Возвращает отформатированное прошедшее время с момента даты в виде строки в зависимости от того, когда это дата наступила
  */
 function getPassedTime($date_add, $time_format = 'H:i', $month_format = 'H:i d.m', $year_format = 'H:i d.m.Y') { // преобразовываем время в нормальный вид

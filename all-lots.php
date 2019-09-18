@@ -12,15 +12,12 @@ if ($link) {
     $page_items = 9;
 
     $categories = getCategories($link);
-    // $categories_sql = 'SELECT name, symbol_code FROM category';
-    // $categories_result = mysqli_query($link, $categories_sql);
-    // $categories = mysqli_fetch_all($categories_result, MYSQLI_ASSOC);
 
     $sql = "
     SELECT lot.id, lot.title, category.name as category
     FROM lot
     INNER JOIN category ON lot.category_id = category.id
-    WHERE lot.date_close > NOW() AND category.name = ?;
+    WHERE lot.date_close > NOW() AND category.name = ?
     ";;
     $stmt = db_get_prepare_stmt($link, $sql, [$category]);
     mysqli_stmt_execute($stmt);
@@ -37,7 +34,7 @@ if ($link) {
     LEFT JOIN bet ON lot.id = bet.lot_id
     WHERE lot.date_close > NOW() AND category.name = ?
     GROUP BY lot.title, lot.initial_rate, lot.date_close, lot.image, category.name, lot.date_add, lot.id
-    ORDER BY lot.date_add DESC LIMIT ? OFFSET ?;
+    ORDER BY lot.date_add DESC LIMIT ? OFFSET ?
     ";;
     $stmt = db_get_prepare_stmt($link, $sql_page, [$category, $page_items, $offset]);
     mysqli_stmt_execute($stmt);
