@@ -8,7 +8,7 @@ if (!$link) {
 }
 
 if (isset($_GET['id'])) {
-    $lotId = mysqli_real_escape_string($link, $_GET['id']);
+    $lotId = mysqli_real_escape_string($link, htmlspecialchars($_GET['id'], ENT_QUOTES));
     $lotSql = 'SELECT lot.title, lot.user_id, lot.initial_rate, lot.rate_step, lot.image, lot.date_close, MAX(bet.rate) AS current_rate, category.name AS category, COUNT(bet.lot_id) AS bets_number FROM lot '
     . 'JOIN category ON lot.category_id = category.id '
     . 'JOIN bet ON lot.id = bet.lot_id '
