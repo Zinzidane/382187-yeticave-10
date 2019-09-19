@@ -24,7 +24,7 @@ if (isset($_GET['id'])) {
     $bets = getBets($link, $lot_id);
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['cost']) {
-        $bet = (int) $_POST['cost'];
+        $bet = (int) htmlspecialchars($_POST['cost'], ENT_QUOTES);
         $errors = validateBetForm($bet, $lot);
 
         if (count($errors)) {

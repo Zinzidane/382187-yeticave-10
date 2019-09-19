@@ -19,7 +19,7 @@ if ($categories) {
 $page_content = include_template('add.php', ['categories' => $categories]);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $lot = $_POST;
+    $lot = array_map('htmlspecialchars', $_POST);
     $errors = validateLotForm($lot, $categories_ids);
 
     if (count($errors)) {
