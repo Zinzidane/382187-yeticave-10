@@ -1,15 +1,15 @@
 <?php
 require_once('init.php');
 
-$is_auth = isAuth();
+$isAuth = isAuth();
 if (!isset($_GET['category'])) {
     header("HTTP/1.0 404 Not Found");
     exit;
 }
 if ($link) {
     $category = htmlspecialchars($_GET['category'], ENT_QUOTES);
-    $cur_page = intval($_GET['page'] ?? 1);
-    $page_items = 9;
+    $curPage = intval($_GET['page'] ?? 1);
+    $pageItems = 9;
 
     $categories = getCategories($link);
 
@@ -23,11 +23,11 @@ if ($link) {
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     $lots = mysqli_fetch_all($res, MYSQLI_ASSOC);
-    $items_count = count($lots);
-    $pages_count = ceil($items_count / $page_items);
-    $offset = ($cur_page - 1) * $page_items;
-    $pages = range(1, $pages_count);
-    $sql_page = "
+    $itemsCount = count($lots);
+    $pagesCount = ceil($itemsCount / $pageItems);
+    $offset = ($curPage - 1) * $pageItems;
+    $pages = range(1, $pagesCount);
+    $sqlPage = "
     SELECT lot.id, lot.title, lot.initial_rate, lot.date_close, lot.image, category.name as category, COUNT(bet.lot_id) as betsCount, MAX(bet.rate) + lot.initial_rate as betsPrice
     FROM lot
     INNER JOIN category ON lot.category_id = category.id
@@ -36,7 +36,7 @@ if ($link) {
     GROUP BY lot.title, lot.initial_rate, lot.date_close, lot.image, category.name, lot.date_add, lot.id
     ORDER BY lot.date_add DESC LIMIT ? OFFSET ?
     ";;
-    $stmt = db_get_prepare_stmt($link, $sql_page, [$category, $page_items, $offset]);
+    $stmt = db_get_prepare_stmt($link, $sqlPage, [$category, $pageItems, $offset]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     $lots = mysqli_fetch_all($res, MYSQLI_ASSOC);
@@ -49,21 +49,21 @@ foreach ($lots as $i => $array) {
     }
 }
 
-$page_content = include_template('all-lots.php', [
+$pageContent = include_template('all-lots.php', [
     'lots' => $lots,
     'category' => $category,
     'categories' => $categories,
-    'is_auth' => isAuth(),
-    'pages_count' => $pages_count,
-    'cur_page' => $cur_page,
+    'isAuth' => isAuth(),
+    'pages_count' => $pagesCount,
+    'cur_page' => $curPage,
     'pages' => $pages
 ]);
-$layout_content = include_template('layout.php', [
+$layoutContent = include_template('layout.php', [
     'title' => 'Лоты по категориям',
     'username' => getUsername(),
-    'is_auth' => isAuth(),
-    'content' => $page_content,
+    'isAuth' => isAuth(),
+    'content' => $pageContent,
     'categories' => $categories
 ]);
 
-print($layout_content);
+print($layoutContent);

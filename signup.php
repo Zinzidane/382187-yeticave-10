@@ -8,42 +8,42 @@ if (!$link) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $signup_form = $_POST;
-    $errors = validateSignupForm($signup_form);
+    $signupForm = $_POST;
+    $errors = validateSignupForm($signupForm);
 
     if (count($errors)) {
-        $page_content = include_template('signup.php', ['signup_form' => $signup_form, 'errors' => $errors]);
+        $pageContent = include_template('signup.php', ['signup_form' => $signupForm, 'errors' => $errors]);
     } else {
-        $user_find_sql = 'SELECT id FROM user WHERE email = ? ';
-        $user_find_stmt = db_get_prepare_stmt($link, $user_find_sql, [$signup_form['email']]);
-        $user_find_res = mysqli_stmt_execute($user_find_stmt);
-        $user_find = mysqli_fetch_assoc(mysqli_stmt_get_result($user_find_stmt));
+        $userFindSql = 'SELECT id FROM user WHERE email = ? ';
+        $userFindStmt = db_get_prepare_stmt($link, $userFindSql, [$signupForm['email']]);
+        $userFindRes = mysqli_stmt_execute($userFindStmt);
+        $userFind = mysqli_fetch_assoc(mysqli_stmt_get_result($userFindStmt));
 
-        if ($user_find) {
+        if ($userFind) {
             $errors['email'] = 'Пользователь с этим email уже зарегистрирован';
-            $page_content = include_template('signup.php', ['signup_form' => $signup_form, 'errors' => $errors]);
+            $pageContent = include_template('signup.php', ['signup_form' => $signupForm, 'errors' => $errors]);
         } else {
-            $password = password_hash($signup_form['password'], PASSWORD_DEFAULT);
+            $password = password_hash($signupForm['password'], PASSWORD_DEFAULT);
 
-            $user_add_sql = 'INSERT INTO user (email, name, password) VALUES (?, ?, ?)';
-            $user_add_stmt = db_get_prepare_stmt($link, $user_add_sql, [$signup_form['email'], $signup_form['name'], $password]);
-            $user_add_res = mysqli_stmt_execute($user_add_stmt);
+            $userAddSql = 'INSERT INTO user (email, name, password) VALUES (?, ?, ?)';
+            $userAddStmt = db_get_prepare_stmt($link, $userAddSql, [$signupForm['email'], $signupForm['name'], $password]);
+            $userAddRes = mysqli_stmt_execute($userAddStmt);
         }
 
-        if ($user_add_res && empty($errors)) {
+        if ($userAddRes && empty($errors)) {
             header("Location: /signin.php");
             exit;
         }
     }
 }
-$page_content = include_template('signup.php', ['signup_form' => $signup_form, 'errors' => $errors]);
+$pageContent = include_template('signup.php', ['signup_form' => $signupForm, 'errors' => $errors]);
 
-$layout_content = include_template('layout.php', [
+$layoutContent = include_template('layout.php', [
     'title' => 'Yeticave | Регистрация',
     'username' => getUsername(),
-    'is_auth' => isAuth(),
-    'content'=> $page_content,
+    'isAuth' => isAuth(),
+    'content'=> $pageContent,
     'categories' => []
 ]);
 
-print($layout_content);
+print($layoutContent);

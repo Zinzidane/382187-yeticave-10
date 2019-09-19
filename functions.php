@@ -8,10 +8,10 @@
  * @return string Отформатированная цена
  */
 function formatPrice($price) {
-    $ceiled_price = ceil($price);
-    $formatted_price = number_format($ceiled_price, 0, '.', ' ');
+    $ceiledPrice = ceil($price);
+    $formattedPrice = number_format($ceiledPrice, 0, '.', ' ');
 
-    return $formatted_price;
+    return $formattedPrice;
 }
 
 /**
@@ -36,11 +36,11 @@ function addCurrencyToPrice($price, $className, $currency) {
  */
 function getDtRange($date) {
     // В одном дне 86400 секунд
-    $end_date = strtotime($date);
-    $secs_to_end = $end_date - time();
+    $endDate = strtotime($date);
+    $secsToEnd = $endDate - time();
 
-    $hours = str_pad(floor($secs_to_end / 3600), 2, "0", STR_PAD_LEFT);
-    $minutes = str_pad(floor(($secs_to_end % 3600) / 60), 2, "0", STR_PAD_LEFT);
+    $hours = str_pad(floor($secsToEnd / 3600), 2, "0", STR_PAD_LEFT);
+    $minutes = str_pad(floor(($secsToEnd % 3600) / 60), 2, "0", STR_PAD_LEFT);
 
     return [$hours, $minutes];
 }
@@ -48,12 +48,12 @@ function getDtRange($date) {
 /**
  * Получает время, которое прошло с момента даты
  *
- * @param string $end_time Дата в виде строки
+ * @param string $endTime Дата в виде строки
  *
  * @return string Возвращает отформатированное время c прошедшей даты
  */
-function getTimeLeft($end_time) {
-    $timer = strtotime($end_time) - strtotime('now');
+function getTimeLeft($endTime) {
+    $timer = strtotime($endTime) - strtotime('now');
 
     if ($timer <=0) {
         return 0;
@@ -78,23 +78,23 @@ function getTimeLeft($end_time) {
  * Получает информацию о ставке
  *
  * @param $bet Ставка
- * @param int $user_id ID текущего пользователя
+ * @param int $userId ID текущего пользователя
  *
  * @return string Возвращает информацию о ставке
  */
-function getBetInfo($bet, $user_id) {
-    $end_time = $bet['date_close'];
-    $end_time_result = getTimeLeft($end_time);
+function getBetInfo($bet, $userId) {
+    $endTime = $bet['date_close'];
+    $endTimeResult = getTimeLeft($endTime);
 
-    if ($bet['winner_id'] == $user_id) {
+    if ($bet['winner_id'] == $userId) {
         return "Ставка выиграла";
     }
 
-    if ($end_time_result <= 0) {
+    if ($endTimeResult <= 0) {
         return "Торги окончены";
     }
 
-    return $end_time_result;
+    return $endTimeResult;
 }
 
 /**
@@ -111,17 +111,17 @@ function getUserId() {
 /**
  * Получает текущую цену
  *
- * @param int $initial_rate Начальная ставка
- * @param int $last_bet Последняя ставка
+ * @param int $initialRate Начальная ставка
+ * @param int $lastBet Последняя ставка
  *
  * @return int Возвращает текущую цену в виде числа
  */
-function getCurrentPrice($initial_rate, $last_bet) {
-    if ($last_bet) {
-        return $last_bet;
+function getCurrentPrice($initialRate, $lastBet) {
+    if ($lastBet) {
+        return $lastBet;
     }
 
-    return $initial_rate;
+    return $initialRate;
 }
 
 /**
@@ -162,15 +162,15 @@ function getId($element) {
  * @return array Возвращает массив категорий, если они существует
  */
 function getCategories($link) {
-    $categories_sql = 'SELECT id, name, symbol_code FROM category';
-    $categories_result = mysqli_query($link, $categories_sql);
+    $categoriesSql = 'SELECT id, name, symbol_code FROM category';
+    $categoriesResult = mysqli_query($link, $categoriesSql);
 
-    if (!$categories_result) {
+    if (!$categoriesResult) {
         $error = mysqli_error($link);
         header("HTTP/1.0 404 Not Found");
     }
 
-    $categories = mysqli_fetch_all($categories_result, MYSQLI_ASSOC);
+    $categories = mysqli_fetch_all($categoriesResult, MYSQLI_ASSOC);
 
     return $categories;
 }
@@ -179,24 +179,24 @@ function getCategories($link) {
  * Получает список ставок
  *
  * @param $link mysqli Ресурс соединения
- * @param string $lot_id ID лота
+ * @param string $lotId ID лота
  *
  * @return array Возвращает массив ставок, если они существуют
  */
-function getBets($link, $lot_id) {
-    $bets_sql = 'SELECT bet.rate as rate, bet.date_add as date_add, user.name as user FROM lot '
+function getBets($link, $lotId) {
+    $betsSql = 'SELECT bet.rate as rate, bet.date_add as date_add, user.name as user FROM lot '
     . 'JOIN bet ON lot.id = bet.lot_id '
     . 'JOIN user on user.id = bet.user_id '
-    . 'WHERE lot.id = ' . $lot_id
+    . 'WHERE lot.id = ' . $lotId
     . ' ORDER BY lot.date_add DESC';
-    $bets_result = mysqli_query($link, $bets_sql);
+    $betsResult = mysqli_query($link, $betsSql);
 
-    if (!$bets_result) {
+    if (!$betsResult) {
         $error = mysqli_error($link);
         header("HTTP/1.0 404 Not Found");
     }
 
-    $bets = mysqli_fetch_all($bets_result, MYSQLI_ASSOC);
+    $bets = mysqli_fetch_all($betsResult, MYSQLI_ASSOC);
 
     return $bets;
 }
@@ -216,12 +216,12 @@ function getPostVal($name) {
  * Валидирует категорию
  *
  * @param int $id ID категории в виде числа
- * @param array $allowed_list Массив разрешенных категорий
+ * @param array $allowedList Массив разрешенных категорий
  *
  * @return Возвращает ID категории, если оно валидно, если нет, то возращает null
  */
-function validateCategory($id, $allowed_list) {
-    if (!in_array($id, $allowed_list)) {
+function validateCategory($id, $allowedList) {
+    if (!in_array($id, $allowedList)) {
         return $id;
     }
 
@@ -271,17 +271,17 @@ function validateLength($field, $min, $max) {
  * Валидирует лот
  *
  * @param array $lot Лот
- * @param array $categories_ids Массив ID категорий
+ * @param array $categoriesIds Массив ID категорий
  *
  * @return array Возвращает массив ошибок валидации лота
  */
-function validateText($lot, $categories_ids) {
+function validateText($lot, $categoriesIds) {
     $errors = [];
 
     foreach ($lot as $key => $value) {
         switch ($key) {
             case 'category_id':
-                $errors[$key] = validateCategory($value, $categories_ids);
+                $errors[$key] = validateCategory($value, $categoriesIds);
                 break;
             case 'title':
                 $errors[$key] = validateLength($value, 1, 255);
@@ -352,11 +352,11 @@ function validateLotImage() {
     $errors = [];
 
     if (isset($_FILES['lot_image']) && $_FILES['lot_image']['tmp_name']) {
-        $tmp_name = $_FILES['lot_image']['tmp_name'];
+        $tmpName = $_FILES['lot_image']['tmp_name'];
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $file_type = finfo_file($finfo, $tmp_name);
+        $fileType = finfo_file($finfo, $tmpName);
 
-        if ($file_type !== "image/jpeg" && $file_type !== 'image/png') {
+        if ($fileType !== "image/jpeg" && $fileType !== 'image/png') {
             $errors['file'] = 'Загрузите картинку в формате JPEG или PNG';
         }
     } else {
@@ -370,34 +370,34 @@ function validateLotImage() {
  * Валидирует форму добавления лота
  *
  * @param array $lot Лот
- * @param array $categories_ids Массив ID категорий
+ * @param array $categoriesIds Массив ID категорий
  *
  * @return array Возвращает массив ошибок валидации добавляемого лота
  */
-function validateLotForm($lot, $categories_ids) {
+function validateLotForm($lot, $categoriesIds) {
     $required = ['title', 'category_id', 'description', 'initial_rate', 'rate_step', 'date_close'];
 
-    $errors_text = validateText($lot, $categories_ids);
-    $errors_required_fields = validateRequiredFields($lot, $required);
-    $errors_image = validateLotImage();
-    $errors_form = array_merge($errors_text, $errors_required_fields, $errors_image);
+    $errorsText = validateText($lot, $categoriesIds);
+    $errorsRequiredFields  = validateRequiredFields($lot, $required);
+    $errorsImage = validateLotImage();
+    $errorsForm = array_merge($errorsText, $errorsRequiredFields , $errorsImage);
 
-    return $errors_form;
+    return $errorsForm;
 }
 
 /**
  * Обрабатывает загрузку картики
  *
- * @param $file_field Поле с картинкой
+ * @param $fileField Поле с картинкой
  *
  * @return string Возвращает адрес загруженной картинки в виде строки
  */
-function handleImageUpload($file_field) {
-    $tmp_name = $file_field['tmp_name'];
+function handleImageUpload($fileField) {
+    $tmpName = $fileField['tmp_name'];
     $filename = uniqid() . '.jpeg';
     $filepath = 'uploads/' . $filename;
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
-    move_uploaded_file($tmp_name, __DIR__ . '/uploads/' . $filename);
+    move_uploaded_file($tmpName, __DIR__ . '/uploads/' . $filename);
 
     return $filepath;
 }
@@ -422,30 +422,30 @@ function validateEmail($email) {
 /**
  * Валидирует форму регистрации
  *
- * @param array $signup_form Форма регистрации в виде объекта
+ * @param array $signupForm Форма регистрации в виде объекта
  *
  * @return array Возвращает массив ошибок валидации формы регистрации
  */
-function validateSignupForm($signup_form) {
+function validateSignupForm($signupForm) {
     $required = ['email', 'password', 'name', 'message'];
 
-    $errors_email = validateEmail($signup_form['email']);
-    $errors_required_fields = validateRequiredFields($signup_form, $required);
+    $errorsEmail = validateEmail($signupForm['email']);
+    $errorsRequiredFields  = validateRequiredFields($signupForm, $required);
 
-    return array_merge($errors_email, $errors_required_fields);
+    return array_merge($errorsEmail, $errorsRequiredFields );
 }
 
 /**
  * Валидирует форму логина
  *
- * @param array $signin_form Форма логина в виде объекта
+ * @param array $signinForm Форма логина в виде объекта
  *
  * @return array Возвращает массив ошибок валидации формы логина
  */
-function validateSigninForm($signin_form) {
+function validateSigninForm($signinForm) {
     $required = ['email', 'password'];
 
-    return validateRequiredFields($signin_form, $required);
+    return validateRequiredFields($signinForm, $required);
 }
 
 /**
@@ -477,14 +477,14 @@ function isAuth() {
  */
 function validateBetForm($bet, $lot) {
     $errors = [];
-    $min_cost = $lot['current_rate'] + $lot['rate_step'];
+    $minCost = $lot['current_rate'] + $lot['rate_step'];
 
     if (!is_int($bet)) {
         $errors['cost'] = 'Ставка должна быть целым числом';
     }
 
-    if ($bet < $min_cost) {
-        $errors['cost'] = 'Ставка не может быть меньше '. $min_cost .' ₽';
+    if ($bet < $minCost) {
+        $errors['cost'] = 'Ставка не может быть меньше '. $minCost .' ₽';
     }
 
     return array_filter($errors);
@@ -508,12 +508,12 @@ function formatPassedTime($time, $one, $two, $many) {
 /**
  * Получает массив единиц времени для разного количества единиц
  *
- * @param string $time_unit Единица времени
+ * @param string $timeUnit Единица времени
  *
  * @return string Возвращает массив единиц времени
  */
-function getPluralNounArray($time_unit) {
-    switch ($time_unit) {
+function getPluralNounArray($timeUnit) {
+    switch ($timeUnit) {
         case 'секунда':
             return ['секунда', 'секунды', 'секунд'];
         case 'минута':
@@ -530,32 +530,32 @@ function getPluralNounArray($time_unit) {
  * Получает время прошедшее с момента даты
  *
  * @param string $data_add Дата в виде строки
- * @param string $month_format Месячный формат времени
- * @param string $year_format Годичный формат времени
+ * @param string $monthFormat Месячный формат времени
+ * @param string $yearFormat Годичный формат времени
  *
  * @return string Возвращает отформатированное прошедшее время с момента даты в виде строки в зависимости от того, когда это дата наступила
  */
-function getPassedTime($date_add, $time_format = 'H:i', $month_format = 'H:i d.m', $year_format = 'H:i d.m.Y') { // преобразовываем время в нормальный вид
-    $date = new \DateTime($date_add);
+function getPassedTime($dateAdd, $timeFormat = 'H:i', $monthFormat = 'H:i d.m', $yearFormat = 'H:i d.m.Y') { // преобразовываем время в нормальный вид
+    $date = new \DateTime($dateAdd);
     $today = new \DateTime('now', $date->getTimezone());
     $yesterday = new \DateTime('-1 day', $date->getTimezone());
-    $minutes_ago = floor(($today->format('U') - $date->format('U')) / 60);
-    $hours_ago = floor(($today->format('U') - $date->format('U')) / 3660);
+    $minutesAgo = floor(($today->format('U') - $date->format('U')) / 60);
+    $hoursAgo = floor(($today->format('U') - $date->format('U')) / 3660);
 
-    if ($minutes_ago > 0) {
+    if ($minutesAgo > 0) {
         switch (true) {
-            case ($minutes_ago < 60):
-                return formatPassedTime($minutes_ago, ...getPluralNounArray('минута'));
-            case ($hours_ago > 0 && $hours_ago < 24 && $today->format('ymd') == $date->format('ymd')):
-                return formatPassedTime($hours_ago, ...getPluralNounArray('час'));
+            case ($minutesAgo < 60):
+                return formatPassedTime($minutesAgo, ...getPluralNounArray('минута'));
+            case ($hoursAgo > 0 && $hoursAgo < 24 && $today->format('ymd') == $date->format('ymd')):
+                return formatPassedTime($hoursAgo, ...getPluralNounArray('час'));
             case ($today->format('ymd') == $date->format('ymd')):
-                return sprintf('Сегодня в %s', $date->format($time_format));
+                return sprintf('Сегодня в %s', $date->format($timeFormat));
             case ($yesterday->format('ymd') == $date->format('ymd')):
-                return sprintf('Вчера в %s', $date->format($time_format));
+                return sprintf('Вчера в %s', $date->format($timeFormat));
             case ($today->format('Y') == $date->format('Y')):
-                return $date->format($month_format);
+                return $date->format($monthFormat);
             default:
-                return $date->format($year_format);
+                return $date->format($yearFormat);
         }
     }
 

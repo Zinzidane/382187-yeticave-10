@@ -10,20 +10,20 @@ if (!$link) {
 $categories = getCategories($link);
 
 if ($categories) {
-    $categories_ids = array_map('getId', $categories);
+    $categoriesIds = array_map('getId', $categories);
 } else {
     $error = mysqli_error($link);
     header("HTTP/1.0 404 Not Found");
 }
 
-$page_content = include_template('add.php', ['categories' => $categories]);
+$pageContent = include_template('add.php', ['categories' => $categories]);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lot = array_map('htmlspecialchars', $_POST);
-    $errors = validateLotForm($lot, $categories_ids);
+    $errors = validateLotForm($lot, $categoriesIds);
 
     if (count($errors)) {
-        $page_content = include_template('add.php', ['lot' => $lot, 'errors' => $errors, 'categories' => $categories]);
+        $pageContent = include_template('add.php', ['lot' => $lot, 'errors' => $errors, 'categories' => $categories]);
     } else {
         if(!isset($lot['image'])) {
             $lot['image'] =  handleImageUpload($_FILES['lot_image']);
@@ -31,13 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $lot['user_id'] = getUserId();
 
-        $add_lot_sql = 'INSERT INTO lot (title, category_id, description, initial_rate, rate_step, date_close, image, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-        $stmt = db_get_prepare_stmt($link, $add_lot_sql, $lot);
-        $add_lot_res = mysqli_stmt_execute($stmt);
+        $addLotSql = 'INSERT INTO lot (title, category_id, description, initial_rate, rate_step, date_close, image, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+        $stmt = db_get_prepare_stmt($link, $addLotSql, $lot);
+        $addLotRes = mysqli_stmt_execute($stmt);
 
-        if ($add_lot_res) {
-            $lot_id = mysqli_insert_id($link);
-            header("Location: lot.php?id=" . $lot_id);
+        if ($addLotRes) {
+            $lotId = mysqli_insert_id($link);
+            header("Location: lot.php?id=" . $lotId);
         } else {
             print('Проблема с отправкой данных');
         }
@@ -47,15 +47,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header("Location: /index.php");
         exit;
     }
-    $page_content = include_template('add.php', ['categories' => $categories]);
+    $pageContent = include_template('add.php', ['categories' => $categories]);
 }
 
-$layout_content = include_template('layout.php', [
+$layoutContent = include_template('layout.php', [
     'title' => 'Добавить лот',
     'username' => getUsername(),
-    'is_auth' => isAuth(),
-    'content' => $page_content,
+    'isAuth' => isAuth(),
+    'content' => $pageContent,
     'categories' => $categories
 ]);
 
-print($layout_content);
+print($layoutContent);

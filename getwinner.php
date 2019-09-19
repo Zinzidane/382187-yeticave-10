@@ -7,24 +7,24 @@ if (!$link) {
     exit;
 }
 
-$lots_sql = "
+$lotsSql = "
 SELECT lot.id, lot.title, MAX(bet.rate) as max_bet
 FROM lot
 INNER JOIN bet ON lot.id = bet.lot_id
 WHERE lot.date_close <= NOW() and lot.winner_id IS NULL
 GROUP BY lot.id, lot.title;
 ";
-$lots_result = mysqli_query($link, $lots_sql);
-$lots = mysqli_fetch_all($lots_result, MYSQLI_ASSOC);
+$lotsResult = mysqli_query($link, $lotsSql);
+$lots = mysqli_fetch_all($lotsResult, MYSQLI_ASSOC);
 
 foreach ($lots as $lot) {
-    $winner_sql = "
+    $winnerSql = "
     SELECT bet.user_id, user.name, user.email
     FROM bet
     INNER JOIN user ON bet.user_id = user.id
     WHERE bet.rate = ?;
     ";;
-    $stmt = db_get_prepare_stmt($link, $winner_sql, [$lot['max_bet']]);
+    $stmt = db_get_prepare_stmt($link, $winnerSql, [$lot['max_bet']]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     $winner = mysqli_fetch_all($res, MYSQLI_ASSOC);

@@ -25,7 +25,7 @@
             Мин. ставка <span><?=addCurrencyToPrice($minimal_bet, 'rub', 'р'); ?></span>
             </div>
         </div>
-        <?php if ($is_auth && $lot['user_id'] != getUserId()): ?>
+        <?php if ($isAuth && $lot['user_id'] != getUserId()): ?>
         <?php $classname = (isset($errors)) ? "form--invalid" : ""; ?>
         <form class="lot-item__form <?=$classname; ?>" action="lot.php?id=<?=$_GET['id'];?>" method="post" autocomplete="off">
             <?php $classname = isset($errors['cost']) ? "form__item--invalid" : ""; ?>

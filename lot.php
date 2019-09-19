@@ -8,53 +8,53 @@ if (!$link) {
 }
 
 if (isset($_GET['id'])) {
-    $lot_id = mysqli_real_escape_string($link, $_GET['id']);
-    $lot_sql = 'SELECT lot.title, lot.user_id, lot.initial_rate, lot.rate_step, lot.image, lot.date_close, MAX(bet.rate) AS current_rate, category.name AS category, COUNT(bet.lot_id) AS bets_number FROM lot '
+    $lotId = mysqli_real_escape_string($link, $_GET['id']);
+    $lotSql = 'SELECT lot.title, lot.user_id, lot.initial_rate, lot.rate_step, lot.image, lot.date_close, MAX(bet.rate) AS current_rate, category.name AS category, COUNT(bet.lot_id) AS bets_number FROM lot '
     . 'JOIN category ON lot.category_id = category.id '
     . 'JOIN bet ON lot.id = bet.lot_id '
-    . 'WHERE lot.id = ' . $lot_id;
-    $lot_result = mysqli_query($link, $lot_sql);
+    . 'WHERE lot.id = ' . $lotId;
+    $lotResult = mysqli_query($link, $lotSql);
 
-    if (!$lot_result) {
+    if (!$lotResult) {
         $error = mysqli_error($link);
         header("HTTP/1.0 404 Not Found");
     }
     $categories = getCategories($link);
-    $lot = mysqli_fetch_all($lot_result, MYSQLI_ASSOC)[0];
-    $bets = getBets($link, $lot_id);
+    $lot = mysqli_fetch_all($lotResult, MYSQLI_ASSOC)[0];
+    $bets = getBets($link, $lotId);
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['cost']) {
         $bet = (int) htmlspecialchars($_POST['cost'], ENT_QUOTES);
         $errors = validateBetForm($bet, $lot);
 
         if (count($errors)) {
-            $page_content = include_template('lot.php', ['lot' => $lot, 'bets' => $bets, 'is_auth' => isAuth(), 'errors' => $errors]);
+            $pageContent = include_template('lot.php', ['lot' => $lot, 'bets' => $bets, 'isAuth' => isAuth(), 'errors' => $errors]);
         } else {
-            $rate_sql = 'INSERT INTO bet (rate, user_id, lot_id) VALUES (?, ?, ?)';
-            $rate_stmt = db_get_prepare_stmt($link, $rate_sql, [$_POST['cost'], getUserId(), $lot_id]);
-            $rate_res = mysqli_stmt_execute($rate_stmt);
+            $rateSql = 'INSERT INTO bet (rate, user_id, lot_id) VALUES (?, ?, ?)';
+            $rateStmt = db_get_prepare_stmt($link, $rateSql, [$_POST['cost'], getUserId(), $lotId]);
+            $rateRes = mysqli_stmt_execute($rateStmt);
 
-            if ($rate_res) {
-                $updated_bets = getBets($link, $lot_id);
-                $page_content = include_template('lot.php', ['lot' => $lot, 'bets' => $updated_bets, 'is_auth' => isAuth()]);
+            if ($rateRes) {
+                $updatedBets = getBets($link, $lotId);
+                $pageContent = include_template('lot.php', ['lot' => $lot, 'bets' => $updatedBets, 'isAuth' => isAuth()]);
             } else {
                 print('Проблема с добавление лота в базу данных.');
                 exit;
             }
         }
     } else {
-        $page_content = include_template('lot.php', ['lot' => $lot, 'bets' => $bets, 'is_auth' => isAuth(), 'errors' => $errors]);
+        $pageContent = include_template('lot.php', ['lot' => $lot, 'bets' => $bets, 'isAuth' => isAuth(), 'errors' => $errors]);
     }
 } else {
     header("HTTP/1.0 404 Not Found");
 }
 
-$layout_content = include_template('layout.php', [
+$layoutContent = include_template('layout.php', [
     'title' => 'Просмотр лота',
     'username' => getUsername(),
-    'is_auth' => isAuth(),
-    'content' => $page_content,
+    'isAuth' => isAuth(),
+    'content' => $pageContent,
     'categories' => $categories
 ]);
 
-print($layout_content);
+print($layoutContent);

@@ -8,22 +8,22 @@ if (!$link) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $signin_form = $_POST;
-    $errors = validateSigninForm($signin_form);
+    $signinForm = $_POST;
+    $errors = validateSigninForm($signinForm);
 
     if (count($errors)) {
-        $page_content = include_template('signin.php', ['signin_form' => $signin_form, 'errors' => $errors]);
+        $pageContent = include_template('signin.php', ['signin_form' => $signinForm, 'errors' => $errors]);
     } else {
-        $user_login_sql = 'SELECT * FROM user WHERE email = ?';
-        $user_login_stmt = db_get_prepare_stmt($link, $user_login_sql, [$signin_form['email']]);
-        $user_login_res = mysqli_stmt_execute($user_login_stmt);
-        $user = mysqli_fetch_assoc(mysqli_stmt_get_result($user_login_stmt));
+        $userLoginSql = 'SELECT * FROM user WHERE email = ?';
+        $userLoginStmt = db_get_prepare_stmt($link, $userLoginSql, [$signinForm['email']]);
+        $userLoginRes = mysqli_stmt_execute($userLoginStmt);
+        $user = mysqli_fetch_assoc(mysqli_stmt_get_result($userLoginStmt));
 
         if (!$user) {
             $errors['email'] = 'Такой пользователь не найден';
-            $page_content = include_template('signin.php', ['signin_form' => $signin_form, 'errors' => $errors]);
+            $pageContent = include_template('signin.php', ['signin_form' => $signinForm, 'errors' => $errors]);
         } else {
-            if (password_verify($signin_form['password'], $user['password'])) {
+            if (password_verify($signinForm['password'], $user['password'])) {
                 $_SESSION['user'] = $user;
             } else {
                 $errors['password'] = 'Неверный пароль';
@@ -36,21 +36,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 } else {
-    $page_content = include_template('signin.php', []);
+    $pageContent = include_template('signin.php', []);
 
     if (isAuth()) {
         header("Location: /index.php");
         exit;
     }
 }
-$page_content = include_template('signin.php', ['signin_form' => $signin_form, 'errors' => $errors]);
+$pageContent = include_template('signin.php', ['signin_form' => $signinForm, 'errors' => $errors]);
 
-$layout_content = include_template('layout.php', [
+$layoutContent = include_template('layout.php', [
     'title' => 'Yeticave | Вход',
     'username' => getUsername(),
-    'is_auth' => isAuth(),
-    'content'=> $page_content,
+    'isAuth' => isAuth(),
+    'content'=> $pageContent,
     'categories' => []
 ]);
 
-print($layout_content);
+print($layoutContent);

@@ -20,12 +20,12 @@
             <input type="search" name="search" placeholder="Поиск лота">
             <input class="main-header__search-btn" type="submit" name="find" value="Найти">
         </form>
-        <?php if ($is_auth): ?>
+        <?php if ($isAuth): ?>
             <a class="main-header__add-lot button" href="add.php">Добавить лот</a>
         <?php endif; ?>
 
         <nav class="user-menu">
-            <?php if ($is_auth): ?>
+            <?php if ($isAuth): ?>
             <div class="user-menu__logged">
                 <p><?=htmlspecialchars($username); ?></p>
                 <a class="user-menu__bets" href="my-bets.php">Мои ставки</a>
