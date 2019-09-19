@@ -530,12 +530,11 @@ function getPluralNounArray($timeUnit) {
  * Получает время прошедшее с момента даты
  *
  * @param string $data_add Дата в виде строки
- * @param string $monthFormat Месячный формат времени
  * @param string $yearFormat Годичный формат времени
  *
  * @return string Возвращает отформатированное прошедшее время с момента даты в виде строки в зависимости от того, когда это дата наступила
  */
-function getPassedTime($dateAdd, $timeFormat = 'H:i', $monthFormat = 'H:i d.m', $yearFormat = 'H:i d.m.Y') { // преобразовываем время в нормальный вид
+function getPassedTime($dateAdd, $timeFormat = 'H:i', $yearFormat = 'd.m.y в H:i') { // преобразовываем время в нормальный вид
     $date = new \DateTime($dateAdd);
     $today = new \DateTime('now', $date->getTimezone());
     $yesterday = new \DateTime('-1 day', $date->getTimezone());
@@ -552,8 +551,6 @@ function getPassedTime($dateAdd, $timeFormat = 'H:i', $monthFormat = 'H:i d.m', 
                 return sprintf('Сегодня в %s', $date->format($timeFormat));
             case ($yesterday->format('ymd') == $date->format('ymd')):
                 return sprintf('Вчера в %s', $date->format($timeFormat));
-            case ($today->format('Y') == $date->format('Y')):
-                return $date->format($monthFormat);
             default:
                 return $date->format($yearFormat);
         }
