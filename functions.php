@@ -543,18 +543,19 @@ function getPassedTime($date_add, $time_format = 'H:i', $month_format = 'H:i d.m
     $hours_ago = floor(($today->format('U') - $date->format('U')) / 3660);
 
     if ($minutes_ago > 0) {
-        if ($minutes_ago < 60) {
-            return formatPassedTime($minutes_ago, ...getPluralNounArray('минута'));
-        } elseif ($hours_ago > 0 && $hours_ago < 24 && $today->format('ymd') == $date->format('ymd')) {
-            return formatPassedTime($hours_ago, ...getPluralNounArray('час'));
-        } elseif ($today->format('ymd') == $date->format('ymd')) {
-            return sprintf('Сегодня в %s', $date->format($time_format));
-        } elseif ($yesterday->format('ymd') == $date->format('ymd')) {
-            return sprintf('Вчера в %s', $date->format($time_format));
-        } elseif ($today->format('Y') == $date->format('Y')) {
-            return $date->format($month_format);
-        } else {
-            return $date->format($year_format);
+        switch (true) {
+            case ($minutes_ago < 60):
+                return formatPassedTime($minutes_ago, ...getPluralNounArray('минута'));
+            case ($hours_ago > 0 && $hours_ago < 24 && $today->format('ymd') == $date->format('ymd')):
+                return formatPassedTime($hours_ago, ...getPluralNounArray('час'));
+            case ($today->format('ymd') == $date->format('ymd')):
+                return sprintf('Сегодня в %s', $date->format($time_format));
+            case ($yesterday->format('ymd') == $date->format('ymd')):
+                return sprintf('Вчера в %s', $date->format($time_format));
+            case ($today->format('Y') == $date->format('Y')):
+                return $date->format($month_format);
+            default:
+                return $date->format($year_format);
         }
     }
 
