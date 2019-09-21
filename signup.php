@@ -8,7 +8,7 @@ if (!$link) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $signupForm = $_POST;
+    $signupForm = array_map('htmlspecialchars', $_POST);
     $errors = validateSignupForm($signupForm);
 
     if (count($errors)) {
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 }
-$pageContent = include_template('signup.php', ['signup_form' => $signupForm, 'errors' => $errors]);
+$pageContent = include_template('signup.php', ['signupForm' => $signupForm, 'errors' => $errors]);
 
 $layoutContent = include_template('layout.php', [
     'title' => 'Yeticave | Регистрация',

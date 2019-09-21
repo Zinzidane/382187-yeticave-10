@@ -396,7 +396,6 @@ function handleImageUpload($fileField) {
     $tmpName = $fileField['tmp_name'];
     $filename = uniqid() . '.jpeg';
     $filepath = 'uploads/' . $filename;
-    $finfo = finfo_open(FILEINFO_MIME_TYPE);
     move_uploaded_file($tmpName, __DIR__ . '/uploads/' . $filename);
 
     return $filepath;
@@ -412,7 +411,7 @@ function handleImageUpload($fileField) {
 function validateEmail($email) {
     $errors = [];
 
-    if (!filter_var($email, FILTER_validateEmail)) {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors['email'] = 'Введите валидный электронный адрес';
     }
 
@@ -444,8 +443,10 @@ function validateSignupForm($signupForm) {
  */
 function validateSigninForm($signinForm) {
     $required = ['email', 'password'];
+    $errorsEmail = validateEmail($signinForm['email']);
+    $errorsRequiredFields  = validateRequiredFields($signinForm, $required);
 
-    return validateRequiredFields($signinForm, $required);
+    return array_merge($errorsEmail, $errorsRequiredFields);
 }
 
 /**

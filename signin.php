@@ -8,11 +8,12 @@ if (!$link) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $signinForm = $_POST;
+    $signinForm = array_map('htmlspecialchars', $_POST);
     $errors = validateSigninForm($signinForm);
 
     if (count($errors)) {
-        $pageContent = include_template('signin.php', ['signin_form' => $signinForm, 'errors' => $errors]);
+        var_dump($errors);
+        $pageContent = include_template('signin.php', ['signinForm' => $signinForm, 'errors' => $errors]);
     } else {
         $userLoginSql = 'SELECT * FROM user WHERE email = ?';
         $userLoginStmt = db_get_prepare_stmt($link, $userLoginSql, [$signinForm['email']]);
@@ -21,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if (!$user) {
             $errors['email'] = 'Такой пользователь не найден';
-            $pageContent = include_template('signin.php', ['signin_form' => $signinForm, 'errors' => $errors]);
+            $pageContent = include_template('signin.php', ['signinForm' => $signinForm, 'errors' => $errors]);
         } else {
             if (password_verify($signinForm['password'], $user['password'])) {
                 $_SESSION['user'] = $user;
@@ -43,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 }
-$pageContent = include_template('signin.php', ['signin_form' => $signinForm, 'errors' => $errors]);
+$pageContent = include_template('signin.php', ['signinForm' => $signinForm, 'errors' => $errors]);
 
 $layoutContent = include_template('layout.php', [
     'title' => 'Yeticave | Вход',
