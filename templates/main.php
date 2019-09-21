@@ -28,15 +28,10 @@
                             <span class="lot__amount">Стартовая цена</span>
                             <span class="lot__cost"><?=addCurrencyToPrice(formatPrice(htmlspecialchars($lot['initial_rate'])), 'rub', 'р'); ?></span>
                         </div>
-                        <?php if (getDtRange($lot['date_close'])[0] < 1): ?>
-                        <div class="lot__timer timer--finishing">
+                        <?php $classname = (getDtRange($lot['date_close'])[0] < 1) ? "timer--finishing" : ""; ?>
+                        <div class="lot__timer timer <?=$classname; ?>">
                             <?=implode(':', getDtRange($lot['date_close']));?>
                         </div>
-                        <?php else: ?>
-                        <div class="lot__timer">
-                            <?=implode(':', getDtRange($lot['date_close']));?>
-                        </div>
-                        <?php endif;?>
                     </div>
                 </div>
             </li>

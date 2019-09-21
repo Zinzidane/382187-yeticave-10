@@ -3,9 +3,9 @@
 /**
  * Форматирует цену
  *
- * @param number $price Цена
+ * @param int $price Цена
  *
- * @return string Отформатированная цена
+ * @return string
  */
 function formatPrice($price) {
     $ceiledPrice = ceil($price);
@@ -21,18 +21,18 @@ function formatPrice($price) {
  * @param string $className Название css класса для валюты
  * @param string $currency Название валюты
  *
- * @return string Возвращает html c валютой и ценой
+ * @return string
  */
 function addCurrencyToPrice($price, $className, $currency) {
     return "{$price}<b class={$className}>{$currency}</b>";
 }
 
 /**
- * Получает время до конца даты
+ * Получает время до конца. Возвращает время до окончания даты в формате массива, где первый элемент - часы, а второй - минуты
  *
  * @param string $date Дата в виде строки
  *
- * @return array Возвращает время до окончания даты в формате массива, где первый элемент - часы, а второй - минуты
+ * @return array
  */
 function getDtRange($date) {
     // В одном дне 86400 секунд
@@ -46,11 +46,11 @@ function getDtRange($date) {
 }
 
 /**
- * Получает время, которое прошло с момента даты
+ * Получает отформатированное время, которое прошло с момента даты
  *
  * @param string $endTime Дата в виде строки
  *
- * @return string Возвращает отформатированное время c прошедшей даты
+ * @return string
  */
 function getTimeLeft($endTime) {
     $timer = strtotime($endTime) - strtotime('now');
@@ -77,10 +77,10 @@ function getTimeLeft($endTime) {
 /**
  * Получает информацию о ставке
  *
- * @param $bet Ставка
+ * @param array $bet Ставка
  * @param int $userId ID текущего пользователя
  *
- * @return string Возвращает информацию о ставке
+ * @return string
  */
 function getBetInfo($bet, $userId) {
     $endTime = $bet['date_close'];
@@ -100,7 +100,7 @@ function getBetInfo($bet, $userId) {
 /**
  * Получает ID текущего пользователя
  *
- * @return string Возвращает ID текущего польователя в виде строки
+ * @return string
  */
 function getUserId() {
     if (isset($_SESSION['user']['id'])) {
@@ -114,7 +114,7 @@ function getUserId() {
  * @param int $initialRate Начальная ставка
  * @param int $lastBet Последняя ставка
  *
- * @return int Возвращает текущую цену в виде числа
+ * @return int
  */
 function getCurrentPrice($initialRate, $lastBet) {
     if ($lastBet) {
@@ -131,7 +131,7 @@ function getCurrentPrice($initialRate, $lastBet) {
  * @param int $rate_step Шаг ставки
  * @param int $last_bet Последняя ставка
  *
- * @return int Возвращает минимально возможную ставку в виде числа
+ * @return int
  */
 function getMinimalBet($initial_rate, $rate_step, $last_bet) {
     if (!$last_bet) {
@@ -142,11 +142,11 @@ function getMinimalBet($initial_rate, $rate_step, $last_bet) {
 }
 
 /**
- * Получает ID элемента
+ * Получает ID элемента, если оно существует
  *
- * @param $element Элемент
+ * @param array $element Элемент
  *
- * @return int Возвращает ID элемента, если он существует
+ * @return int|void
  */
 function getId($element) {
     if ($element['id']) {
@@ -155,11 +155,11 @@ function getId($element) {
 }
 
 /**
- * Получает список категорий
+ * Получает список категорий, если они существуют
  *
- * @param $link mysqli Ресурс соединения
+ * @param object $link mysqli Ресурс соединения
  *
- * @return array Возвращает массив категорий, если они существует
+ * @return array|void
  */
 function getCategories($link) {
     $categoriesSql = 'SELECT id, name, symbol_code FROM category';
@@ -176,12 +176,12 @@ function getCategories($link) {
 }
 
 /**
- * Получает список ставок
+ * Получает список ставок, если они существуют
  *
- * @param $link mysqli Ресурс соединения
+ * @param object $link mysqli Ресурс соединения
  * @param string $lotId ID лота
  *
- * @return array Возвращает массив ставок, если они существуют
+ * @return array|void
  */
 function getBets($link, $lotId) {
     $betsSql = 'SELECT bet.rate as rate, bet.date_add as date_add, user.name as user FROM lot '
@@ -202,11 +202,11 @@ function getBets($link, $lotId) {
 }
 
 /**
- * Получает значение из формы
+ * Получает значение из формы, если оно существует
  *
  * @param string $name Название поля формы в виде строки
  *
- * @return Возвращает значение поля формы, если оно существует
+ * @return string
  */
 function getPostVal($name) {
     return $_POST[$name] ?? "";
@@ -218,7 +218,7 @@ function getPostVal($name) {
  * @param int $id ID категории в виде числа
  * @param array $allowedList Массив разрешенных категорий
  *
- * @return Возвращает ID категории, если оно валидно, если нет, то возращает null
+ * @return null|string
  */
 function validateCategory($id, $allowedList) {
     if (!in_array($id, $allowedList)) {
@@ -234,7 +234,7 @@ function validateCategory($id, $allowedList) {
  * @param int $rate Ставка в виде числа
  * @param int $min Минимальное значение ставки
  *
- * @return Возвращает текст ошибки валидации, если ставка невалидна, если нет, то возращает null
+ * @return null|string
  */
 function validateRate($rate, $min) {
     if ($rate < $min) {
@@ -255,7 +255,7 @@ function validateRate($rate, $min) {
  * @param int $min Минимальная  длина значения
  * @param int $max Максимальная длина значения
  *
- * @return Возвращает текст ошибки валидации, если длина значения невалидна, если нет, то возращает null
+ * @return null|string
  */
 function validateLength($field, $min, $max) {
     $len = strlen($field);
@@ -273,7 +273,7 @@ function validateLength($field, $min, $max) {
  * @param array $lot Лот
  * @param array $categoriesIds Массив ID категорий
  *
- * @return array Возвращает массив ошибок валидации лота
+ * @return array
  */
 function validateText($lot, $categoriesIds) {
     $errors = [];
@@ -309,7 +309,7 @@ function validateText($lot, $categoriesIds) {
  *
  * @param string $date Дата завершения лота в виде строки
  *
- * @return Возвращает текст ошибки, если дата завершения лота невалидна, в противном случае возвращает null
+ * @return null|string
  */
 function validateLotDateClose($date) {
     if (!is_date_valid($date)) {
@@ -329,7 +329,7 @@ function validateLotDateClose($date) {
  * @param array $form Валидируемая форма
  * @param array $required Массив ключей обязательных полей
  *
- * @return array Возвращает массив ошибок валидации обязательных полей
+ * @return array
  */
 function validateRequiredFields($form, $required) {
     $errors = [];
@@ -346,7 +346,7 @@ function validateRequiredFields($form, $required) {
 /**
  * Валидирует изображение лота
  *
- * @return array Возвращает массив ошибок валидации изображения лота
+ * @return array
  */
 function validateLotImage() {
     $errors = [];
@@ -372,7 +372,7 @@ function validateLotImage() {
  * @param array $lot Лот
  * @param array $categoriesIds Массив ID категорий
  *
- * @return array Возвращает массив ошибок валидации добавляемого лота
+ * @return array
  */
 function validateLotForm($lot, $categoriesIds) {
     $required = ['title', 'category_id', 'description', 'initial_rate', 'rate_step', 'date_close'];
@@ -386,11 +386,11 @@ function validateLotForm($lot, $categoriesIds) {
 }
 
 /**
- * Обрабатывает загрузку картики
+ * Обрабатывает загрузку картинки
  *
- * @param $fileField Поле с картинкой
+ * @param array $fileField Поле с картинкой
  *
- * @return string Возвращает адрес загруженной картинки в виде строки
+ * @return string
  */
 function handleImageUpload($fileField) {
     $tmpName = $fileField['tmp_name'];
@@ -406,7 +406,7 @@ function handleImageUpload($fileField) {
  *
  * @param string $email Email в виде строки
  *
- * @return array Возвращает массив ошибок валидации email
+ * @return array
  */
 function validateEmail($email) {
     $errors = [];
@@ -423,7 +423,7 @@ function validateEmail($email) {
  *
  * @param array $signupForm Форма регистрации в виде объекта
  *
- * @return array Возвращает массив ошибок валидации формы регистрации
+ * @return array
  */
 function validateSignupForm($signupForm) {
     $required = ['email', 'password', 'name', 'message'];
@@ -439,7 +439,7 @@ function validateSignupForm($signupForm) {
  *
  * @param array $signinForm Форма логина в виде объекта
  *
- * @return array Возвращает массив ошибок валидации формы логина
+ * @return array
  */
 function validateSigninForm($signinForm) {
     $required = ['email', 'password'];
@@ -453,7 +453,7 @@ function validateSigninForm($signinForm) {
  * Возвращает имя текущего пользователя
  *
  *
- * @return Возвращает имя пользователя в виде строки, если сеcсия активна, если нет, то null
+ * @return null|string
  */
 function getUsername() {
     return isset($_SESSION['user']) ? $_SESSION['user']['name'] : null;
@@ -462,7 +462,7 @@ function getUsername() {
 /**
  * Проверяет авторизован пользователь или нет
  *
- * @return boolean Возвращает true, если пользователь авторизован, если нет, то false
+ * @return boolean
  */
 function isAuth() {
     return isset($_SESSION['user']);
@@ -474,7 +474,7 @@ function isAuth() {
  * @param array $bet Ставка
  * @param array $lot Лот
  *
- * @return array Возвращает массив ошибок валидации добавляемого ставки
+ * @return array
  */
 function validateBetForm($bet, $lot) {
     $errors = [];
@@ -499,7 +499,7 @@ function validateBetForm($bet, $lot) {
  * @param string $two Форма если единиц две
  * @param string $many Форма если единиц больше двух
  *
- * @return string Возвращает отформатированное прошедшее время с момента даты в виде строки
+ * @return string
  */
 function formatPassedTime($time, $one, $two, $many) {
     return sprintf('%s %s назад', $time, get_noun_plural_form($time, $one, $two, $many));
@@ -511,7 +511,7 @@ function formatPassedTime($time, $one, $two, $many) {
  *
  * @param string $timeUnit Единица времени
  *
- * @return string Возвращает массив единиц времени
+ * @return string
  */
 function getPluralNounArray($timeUnit) {
     switch ($timeUnit) {
@@ -528,12 +528,12 @@ function getPluralNounArray($timeUnit) {
 
 
 /**
- * Получает время прошедшее с момента даты
+ * Получает отформатированное время, прошедшее с момента даты
  *
  * @param string $data_add Дата в виде строки
  * @param string $yearFormat Годичный формат времени
  *
- * @return string Возвращает отформатированное прошедшее время с момента даты в виде строки в зависимости от того, когда это дата наступила
+ * @return string
  */
 function getPassedTime($dateAdd, $timeFormat = 'H:i', $yearFormat = 'd.m.y в H:i') { // преобразовываем время в нормальный вид
     $date = new \DateTime($dateAdd);
