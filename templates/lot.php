@@ -13,7 +13,8 @@
     </div>
     <div class="lot-item__right">
         <div class="lot-item__state">
-        <div class="<?=getDtRange($lot['date_close'])[0] < 1 ? 'lot__timer timer--finishing' : 'lot__timer'?>">
+        <?php $classname = (getDtRange($lot['date_close'])[0] < 1) ? "timer--finishing" : ""; ?>
+        <div class="lot-item__timer timer <?=$classname; ?>">
             <?=implode(':', getDtRange($lot['date_close']));?>
         </div>
         <div class="lot-item__cost-state">
