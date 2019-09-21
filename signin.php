@@ -12,7 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors = validateSigninForm($signinForm);
 
     if (count($errors)) {
-        var_dump($errors);
         $pageContent = include_template('signin.php', ['signinForm' => $signinForm, 'errors' => $errors]);
     } else {
         $userLoginSql = 'SELECT * FROM user WHERE email = ?';
